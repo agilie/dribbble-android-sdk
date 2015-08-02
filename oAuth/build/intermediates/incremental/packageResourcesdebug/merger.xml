@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="/Users/serg/AndroidStudio_projects/dribbbleapp/library/res"/><source path="/Users/serg/AndroidStudio_projects/dribbbleapp/library/build/generated/res/rs/debug"/><source path="/Users/serg/AndroidStudio_projects/dribbbleapp/library/build/generated/res/resValues/debug"/></dataSet><dataSet config="debug"><source path="/Users/serg/AndroidStudio_projects/dribbbleapp/library/src/debug/res"/></dataSet><mergedItems/></merger>

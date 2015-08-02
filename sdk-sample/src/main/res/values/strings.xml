@@ -1,0 +1,14 @@
+<resources>
+    <string name="title_activity_example">DribbbleSdkExample</string>
+
+    <string name="action_bar_title">Dribbble SDK Example</string>
+    <string name="action_bar_log_in">log in</string>
+    <string name="action_bar_log_out">log out</string>
+
+    <string name="example_activity_get_my_shots">Get my shots</string>
+    <string name="example_activity_get_recent_shots">Get 5 recent shots</string>
+    <string name="example_activity_tv_start_text">"Your query's result will be here!"</string>
+
+    <string name="toast_logged_in">"Logged in"</string>
+    <string name="toast_logged_out">"Logged out"</string>
+</resources>

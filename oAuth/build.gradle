@@ -1,0 +1,37 @@
+apply plugin: 'com.android.library'
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+configurations {
+  compile.exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+  compile.exclude group: 'xpp3', module: 'xpp3'
+}
+
+android {
+  compileSdkVersion 21
+  buildToolsVersion "21.1.2"
+
+  lintOptions {
+    // temporary fix for https://code.google.com/p/android/issues/detail?id=64014
+    disable 'InvalidPackage'
+  }
+
+  sourceSets {
+    main {
+      manifest.srcFile 'AndroidManifest.xml'
+      res.srcDirs = ['res']
+    }
+  }
+}
+
+dependencies {
+    compile 'com.android.support:support-v4:19.1.0'
+    compile('com.google.api-client:google-api-client-android:1.15.0-rc') {
+        exclude group: 'com.google.android.google-play-services', module: 'google-play-services'
+        exclude group: 'junit', module: 'junit'
+        exclude group: 'com.google.android', module: 'android'
+    }
+    compile 'com.google.oauth-client:google-oauth-client-java6:1.15.0-rc'
+    compile 'com.google.http-client:google-http-client-jackson:1.15.0-rc'
+}
+
