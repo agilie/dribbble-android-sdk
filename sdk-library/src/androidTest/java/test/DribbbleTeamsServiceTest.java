@@ -5,11 +5,11 @@ import android.test.InstrumentationTestCase;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
-import agilie.dribbblesdk.domain.Shot;
-import agilie.dribbblesdk.domain.User;
-import agilie.dribbblesdk.service.retrofit.DribbbleServiceGenerator;
-import agilie.dribbblesdk.service.retrofit.services.DribbbleShotsService;
-import agilie.dribbblesdk.service.retrofit.services.DribbbleTeamsService;
+import com.agilie.dribbblesdk.domain.Shot;
+import com.agilie.dribbblesdk.domain.User;
+import com.agilie.dribbblesdk.service.retrofit.DribbbleServiceGenerator;
+import com.agilie.dribbblesdk.service.retrofit.services.DribbbleShotsService;
+import com.agilie.dribbblesdk.service.retrofit.services.DribbbleTeamsService;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;

@@ -1,14 +1,9 @@
 package test;
 
-import android.net.Uri;
 import android.os.Environment;
 import android.test.InstrumentationTestCase;
-import android.util.Log;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -16,17 +11,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
-import agilie.dribbblesdk.R;
-import agilie.dribbblesdk.domain.Attachment;
-import agilie.dribbblesdk.domain.Bucket;
-import agilie.dribbblesdk.domain.Comment;
-import agilie.dribbblesdk.domain.Like;
-import agilie.dribbblesdk.domain.Project;
-import agilie.dribbblesdk.domain.Rebound;
-import agilie.dribbblesdk.domain.Shot;
-import agilie.dribbblesdk.service.retrofit.DribbbleServiceGenerator;
-import agilie.dribbblesdk.service.retrofit.services.DribbbleShotsService;
-import agilie.dribbblesdk.service.retrofit.services.DribbbleUserService;
+import com.agilie.dribbblesdk.domain.Attachment;
+import com.agilie.dribbblesdk.domain.Bucket;
+import com.agilie.dribbblesdk.domain.Comment;
+import com.agilie.dribbblesdk.domain.Like;
+import com.agilie.dribbblesdk.domain.Project;
+import com.agilie.dribbblesdk.domain.Rebound;
+import com.agilie.dribbblesdk.domain.Shot;
+import com.agilie.dribbblesdk.service.retrofit.DribbbleServiceGenerator;
+import com.agilie.dribbblesdk.service.retrofit.services.DribbbleShotsService;
+import com.agilie.dribbblesdk.service.retrofit.services.DribbbleUserService;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Header;

@@ -6,7 +6,7 @@
     android:paddingLeft="10dp"
     android:paddingRight="20dp"
     android:orientation="vertical"
-    tools:context="agilie.dribbblesdkexample.activity.ExampleActivity">
+    tools:context="com.agilie.dribbblesdk.sample.activity.ExampleActivity">
 
     <Button
         android:layout_width="match_parent"
