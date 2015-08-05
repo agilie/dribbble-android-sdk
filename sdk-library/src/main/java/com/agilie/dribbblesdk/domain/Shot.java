@@ -10,9 +10,6 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * Created by serg on 3/18/15.
- */
 public class Shot implements Serializable{
 
     public static final String LIST_ANIMATED = "animated";

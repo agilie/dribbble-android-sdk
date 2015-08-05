@@ -25,9 +25,6 @@ import retrofit.http.Query;
 import retrofit.http.QueryMap;
 import retrofit.mime.TypedFile;
 
-/**
- * Created by serg on 7/9/15.
- */
 public interface DribbbleShotsService {
 
     /**

@@ -9,9 +9,6 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 
-/**
- * Created by serg on 3/19/15.
- */
 public class Team implements Serializable {
 
     @SerializedName("id")

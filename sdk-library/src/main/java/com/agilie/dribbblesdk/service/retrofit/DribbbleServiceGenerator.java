@@ -8,9 +8,6 @@ import com.agilie.dribbblesdk.service.retrofit.services.DribbbleUserService;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 
-/**
- * Created by serg on 3/19/15.
- */
 public class DribbbleServiceGenerator {
 
     public static String DRIBBBLE_URL = "https://api.dribbble.com/v1";

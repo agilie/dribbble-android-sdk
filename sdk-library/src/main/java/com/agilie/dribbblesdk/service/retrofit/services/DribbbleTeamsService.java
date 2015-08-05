@@ -8,9 +8,6 @@ import retrofit.Callback;
 import retrofit.http.GET;
 import retrofit.http.Path;
 
-/**
- * Created by serg on 7/9/15.
- */
 public interface DribbbleTeamsService {
 
     /**

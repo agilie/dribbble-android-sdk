@@ -13,9 +13,6 @@ import retrofit.http.PUT;
 import retrofit.http.Path;
 import retrofit.http.Query;
 
-/**
- * Created by serg on 7/9/15.
- */
 public interface DribbbleBucketsService {
 
     /**

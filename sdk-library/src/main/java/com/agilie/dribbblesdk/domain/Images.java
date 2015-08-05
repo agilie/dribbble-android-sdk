@@ -9,9 +9,6 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 
-/**
- * Created by tatyanasoldatkina on 3/26/15.
- */
 public class Images implements Serializable{
 
     @SerializedName("hidpi")

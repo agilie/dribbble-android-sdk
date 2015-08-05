@@ -1,8 +1,5 @@
 package com.agilie.dribbblesdk.service.auth;
 
-/**
- * Created by serg on 7/3/15.
- */
 public class DribbbleConstants {
     static final String OAUTH_URL = "https://dribbble.com/oauth/authorize";
     static final String OAUTH_URL_STATE_TEMPLATE = "?state=%s";

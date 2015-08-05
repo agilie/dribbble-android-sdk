@@ -27,9 +27,6 @@ import retrofit.client.Header;
 import retrofit.client.Response;
 import retrofit.mime.TypedFile;
 
-/**
- * Created by admin on 7/14/15.
- */
 public class DribbbleShotsServiceTest extends InstrumentationTestCase {
 
     protected static final String AUTH_TOKEN_FOR_TEST = "3f4b08a584a0b7cb770990ca5d83050a9761d48d0611dbfc4b944ecf1cbac7a2";

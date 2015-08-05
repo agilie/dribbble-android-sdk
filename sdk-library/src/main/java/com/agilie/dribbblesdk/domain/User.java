@@ -10,9 +10,6 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * Created by serg on 3/19/15.
- */
 public class User implements Serializable {
 
     @SerializedName("id")

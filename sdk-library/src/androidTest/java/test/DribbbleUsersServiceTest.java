@@ -18,9 +18,6 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-/**
- * Created by admin on 7/15/15.
- */
 public class DribbbleUsersServiceTest extends InstrumentationTestCase {
 
     private static final String AUTH_TOKEN_FOR_TEST = "3f4b08a584a0b7cb770990ca5d83050a9761d48d0611dbfc4b944ecf1cbac7a2";

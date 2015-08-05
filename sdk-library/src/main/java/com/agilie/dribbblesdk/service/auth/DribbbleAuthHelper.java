@@ -21,9 +21,6 @@ import com.wuman.android.auth.oauth2.store.SharedPreferencesCredentialStore;
 import java.io.IOException;
 import java.util.concurrent.CancellationException;
 
-/**
- * Created by user on 18.03.15.
- */
 public class DribbbleAuthHelper {
 
     public interface AuthListener {
