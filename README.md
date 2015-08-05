@@ -40,3 +40,6 @@ Don't forget to fill the credentials to use Dribbble API:
 
 Agilie info@agilie.com
 
+## License
+
+Dribbble API SDK is available under the MIT License. See the LICENSE.md file for more info.
