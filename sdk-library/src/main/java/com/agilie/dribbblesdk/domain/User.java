@@ -9,7 +9,11 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Map;
 
+/**
+ * Created by serg on 3/19/15.
+ */
 public class User implements Serializable {
 
     @SerializedName("id")
@@ -39,6 +43,8 @@ public class User implements Serializable {
                 "twitter" : "https://twitter.com/simplebits"
     },
     */
+    @SerializedName("links")
+    private Map<String, String> links;
 
     @SerializedName("buckets_count")
     private long bucketsCount;
@@ -157,6 +163,14 @@ public class User implements Serializable {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public Map<String, String> getLinks() {
+        return links;
+    }
+
+    public void setLinks(Map<String, String> links) {
+        this.links = links;
     }
 
     public long getBucketsCount() {
@@ -337,6 +351,7 @@ public class User implements Serializable {
             result.put("avatar_url", avatarUrl);
             result.put("bio", bio);
             result.put("location", location);
+            result.put("links", links);
             result.put("buckets_count", bucketsCount);
             result.put("comments_received_count", commentsReceivedCount);
             result.put("followers_count", followersCount);

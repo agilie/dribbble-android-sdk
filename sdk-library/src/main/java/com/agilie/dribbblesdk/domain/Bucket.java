@@ -5,7 +5,10 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Bucket implements Serializable{
+/**
+ * Created by tatyanasoldatkina on 3/26/15.
+ */
+public class Bucket implements Serializable {
 
     @SerializedName("id")
     private long id;
@@ -82,5 +85,10 @@ public class Bucket implements Serializable{
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

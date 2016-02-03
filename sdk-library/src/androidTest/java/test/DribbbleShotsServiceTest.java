@@ -3,14 +3,6 @@ package test;
 import android.os.Environment;
 import android.test.InstrumentationTestCase;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CountDownLatch;
-
 import com.agilie.dribbblesdk.domain.Attachment;
 import com.agilie.dribbblesdk.domain.Bucket;
 import com.agilie.dribbblesdk.domain.Comment;
@@ -21,6 +13,15 @@ import com.agilie.dribbblesdk.domain.Shot;
 import com.agilie.dribbblesdk.service.retrofit.DribbbleServiceGenerator;
 import com.agilie.dribbblesdk.service.retrofit.services.DribbbleShotsService;
 import com.agilie.dribbblesdk.service.retrofit.services.DribbbleUserService;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Header;

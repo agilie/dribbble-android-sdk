@@ -5,7 +5,10 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Attachment implements Serializable{
+/**
+ * Created by tatyanasoldatkina on 3/26/15.
+ */
+public class Attachment implements Serializable {
 
     @SerializedName("id")
     private long id;

@@ -4,10 +4,9 @@ import android.widget.TextView;
 
 import java.util.concurrent.TimeUnit;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Header;
-import retrofit.client.Response;
+import okhttp3.Headers;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public abstract class PrintableCallback<T> implements Callback<T>, Printable {
 
@@ -20,14 +19,14 @@ public abstract class PrintableCallback<T> implements Callback<T>, Printable {
     }
 
     @Override
-    public void success(T t, Response response) {
-        print(displayResponseOnScreen(t, response));
+    public void onResponse(Response<T> response) {
+        print(displayResponseOnScreen(response.body(), response));
     }
 
     @Override
-    public void failure(RetrofitError error) {
-        if (error != null) {
-            print(displayResponseOnScreen(null, error.getResponse()));
+    public void onFailure(Throwable t) {
+        if (t != null) {
+            print(t.toString());
         }
     }
 
@@ -39,16 +38,16 @@ public abstract class PrintableCallback<T> implements Callback<T>, Printable {
 
     private String displayResponseOnScreen(T t, Response response) {
         StringBuffer textViewText = new StringBuffer();
-        textViewText.append(String.format("<--- HTTP %s %s (%sms)",
-                        response.getStatus(),
-                        response.getUrl(),
+        textViewText.append(String.format("<--- HTTP code %d (%sms)",
+                        response.code(),
                         TimeUnit.NANOSECONDS.toMillis(System.nanoTime()))
         );
 
         textViewText.append(LINE_WRAP);
 
-        for (Header header : response.getHeaders()) {
-            textViewText.append(header.toString()).append(LINE_WRAP);
+        Headers headers = response.headers();
+        for (String name : headers.names()) {
+            textViewText.append(name).append(" --> ").append(headers.get(name)).append(LINE_WRAP);
         }
 
         if (t != null) {

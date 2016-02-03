@@ -2,9 +2,6 @@ package test;
 
 import android.test.InstrumentationTestCase;
 
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
-
 import com.agilie.dribbblesdk.domain.Bucket;
 import com.agilie.dribbblesdk.domain.Followee;
 import com.agilie.dribbblesdk.domain.Like;
@@ -14,6 +11,10 @@ import com.agilie.dribbblesdk.domain.Team;
 import com.agilie.dribbblesdk.domain.User;
 import com.agilie.dribbblesdk.service.retrofit.DribbbleServiceGenerator;
 import com.agilie.dribbblesdk.service.retrofit.services.DribbbleUserService;
+
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;

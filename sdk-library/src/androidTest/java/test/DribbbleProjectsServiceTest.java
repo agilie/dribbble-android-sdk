@@ -2,13 +2,14 @@ package test;
 
 import android.test.InstrumentationTestCase;
 
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
-
 import com.agilie.dribbblesdk.domain.Project;
 import com.agilie.dribbblesdk.domain.Shot;
 import com.agilie.dribbblesdk.service.retrofit.DribbbleServiceGenerator;
 import com.agilie.dribbblesdk.service.retrofit.services.DribbbleProjectsService;
+
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;

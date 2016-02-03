@@ -5,12 +5,19 @@ import com.agilie.dribbblesdk.service.retrofit.services.DribbbleProjectsService;
 import com.agilie.dribbblesdk.service.retrofit.services.DribbbleShotsService;
 import com.agilie.dribbblesdk.service.retrofit.services.DribbbleTeamsService;
 import com.agilie.dribbblesdk.service.retrofit.services.DribbbleUserService;
-import retrofit.RequestInterceptor;
-import retrofit.RestAdapter;
+
+import java.io.IOException;
+
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import retrofit2.GsonConverterFactory;
+import retrofit2.Retrofit;
 
 public class DribbbleServiceGenerator {
 
-    public static String DRIBBBLE_URL = "https://api.dribbble.com/v1";
+    public static String DRIBBBLE_URL = "https://api.dribbble.com/v1/";
 
 
     public static DribbbleBucketsService getDribbbleBucketService(final String authToken) {
@@ -38,15 +45,20 @@ public class DribbbleServiceGenerator {
         return service;
     }
 
-    private static RestAdapter getRestAdapter(final String authToken) {
-        return new RestAdapter.Builder()
-                    .setEndpoint(DRIBBBLE_URL)
-                    .setRequestInterceptor(new RequestInterceptor() {
-                        @Override
-                        public void intercept(RequestFacade request) {
-                            request.addHeader("Authorization", "Bearer " + authToken);
-                        }
-                    })
-                    .build();
+    private static Retrofit getRestAdapter(final String authToken) {
+        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                Request request = chain.request();
+                Request authRequest = request.newBuilder().addHeader("Authorization", "Bearer " + authToken).build();
+                return chain.proceed(authRequest);
+            }
+        }).build();
+
+        return new Retrofit.Builder()
+                .baseUrl(DRIBBBLE_URL)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
     }
 }

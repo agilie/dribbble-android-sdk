@@ -1,8 +1,5 @@
 package com.agilie.dribbblesdk.service.retrofit.services;
 
-import java.util.List;
-import java.util.Map;
-
 import com.agilie.dribbblesdk.domain.Attachment;
 import com.agilie.dribbblesdk.domain.Bucket;
 import com.agilie.dribbblesdk.domain.Comment;
@@ -10,21 +7,28 @@ import com.agilie.dribbblesdk.domain.Like;
 import com.agilie.dribbblesdk.domain.Project;
 import com.agilie.dribbblesdk.domain.Rebound;
 import com.agilie.dribbblesdk.domain.Shot;
-import retrofit.Callback;
-import retrofit.client.Response;
-import retrofit.http.Body;
-import retrofit.http.DELETE;
-import retrofit.http.GET;
-import retrofit.http.Multipart;
-import retrofit.http.POST;
-import retrofit.http.PUT;
-import retrofit.http.Part;
-import retrofit.http.PartMap;
-import retrofit.http.Path;
-import retrofit.http.Query;
-import retrofit.http.QueryMap;
-import retrofit.mime.TypedFile;
 
+import java.util.List;
+import java.util.Map;
+
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.http.Body;
+import retrofit2.http.DELETE;
+import retrofit2.http.GET;
+import retrofit2.http.Multipart;
+import retrofit2.http.POST;
+import retrofit2.http.PUT;
+import retrofit2.http.Part;
+import retrofit2.http.PartMap;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
+
+/**
+ * Created by serg on 7/9/15.
+ */
 public interface DribbbleShotsService {
 
     /**
@@ -32,20 +36,22 @@ public interface DribbbleShotsService {
      *
      * @param page     Page number, used to receive result partially by pages.
      *                 Increase this value by 1 for each next request
-     * @param callback Network operation result
+     *
+     * @return         Network operation result
      */
-    @GET("/shots")
-    void fetchShots(@Query("page") int page, Callback<List<Shot>> callback);
+    @GET("shots")
+    Call<List<Shot>> fetchShots(@Query("page") int page);
 
     /**
      * Get shots list (popular shots by default)
      *
      * @param page     Page number, used to receive result partially by pages.
      *                 Increase this value by 1 for each next request
-     * @param callback Network operation result
+     *
+     * @return         Network operation result
      */
-    @GET("/shots")
-    void fetchShots(@Query("page") int page, @Query("per_page") int perPage, Callback<List<Shot>> callback);
+    @GET("shots")
+    Call<List<Shot>> fetchShots(@Query("page") int page, @Query("per_page") int perPage);
 
     /**
      * Get shots list
@@ -65,10 +71,11 @@ public interface DribbbleShotsService {
      *                 <br/><code>Shot.SORT_RECENT</code>
      *                 <br/><code>Shot.SORT_VIEWS</code>
      *                 <br/>Default: Results are sorted by popularity.
-     * @param callback Network operation result
+     *
+     * @return         Network operation result
      */
-    @GET("/shots")
-    void fetchShots(@Query("page") int page, @Query("per_page") int perPage, @Query("list") String list, @Query("sort") String sort, Callback<List<Shot>> callback);
+    @GET("shots")
+    Call<List<Shot>> fetchShots(@Query("page") int page, @Query("per_page") int perPage, @Query("list") String list, @Query("sort") String sort);
 
     /**
      * Get shots list
@@ -98,13 +105,14 @@ public interface DribbbleShotsService {
      *                  <p/>
      *                  Note that the value is ignored when sorting with recent.
      *                  Default: Results from now.
-     * @param callback  Network operation result
+     *
+     * @return          Network operation result
      */
-    @GET("/shots")
-    void fetchShots(@Query("page") int page, @Query("per_page") int perPage, @Query("list") String list, @Query("sort") String sort, @Query("date") String date, @Query("timeframe") String timeframe, Callback<List<Shot>> callback);
+    @GET("shots")
+    Call<List<Shot>> fetchShots(@Query("page") int page, @Query("per_page") int perPage, @Query("list") String list, @Query("sort") String sort, @Query("date") String date, @Query("timeframe") String timeframe);
 
-    @GET("/shots")
-    void fetchShots(@Query("page") int page, @Query("list") String list, @Query("sort") String sort, @Query("date") String date, @Query("timeframe") String timeframe, Callback<List<Shot>> callback);
+    @GET("shots")
+    Call<List<Shot>> fetchShots(@Query("page") int page, @Query("list") String list, @Query("sort") String sort, @Query("date") String date, @Query("timeframe") String timeframe);
 
     /**
      * Get shots list
@@ -116,10 +124,11 @@ public interface DribbbleShotsService {
      *                 <code>Shot.LIST_PLAYOFFS</code>
      *                 <code>Shot.LIST_REBOUNDS</code>
      *                 <code>Shot.LIST_TEAMS</code>
-     * @param callback Network operation result
+     *
+     * @return         Network operation result
      */
-    @GET("/shots")
-    void fetchShots(@Query("list") String list, Callback<List<Shot>> callback);
+    @GET("shots")
+    Call<List<Shot>> fetchShots(@Query("list") String list);
 
     /**
      * Get shots list
@@ -154,10 +163,11 @@ public interface DribbbleShotsService {
      *
      *                       Parameters name - the type of keys maintained by this map
      *                       Parameters value - the type of mapped values
-     * @param callback Network operation result
+     *
+     * @return               Network operation result
      */
-    @GET("/shots")
-    void fetchShots(@QueryMap Map<String, Object> parameters, Callback<List<Shot>> callback);
+    @GET("shots")
+    Call<List<Shot>> fetchShots(@QueryMap Map<String, Object> parameters);
 
     /**
      * Get shots list
@@ -166,19 +176,20 @@ public interface DribbbleShotsService {
      *                 <code>Shot.SORT_COMMENTS</code>
      *                 <code>Shot.SORT_RECENT</code>
      *                 <code>Shot.SORT_VIEWS</code>
-     * @param callback Network operation result
+     *
+     * @return         Network operation result
      */
-    @GET("/shots")
-    void fetchSortedShots(@Query("sort") String sort, Callback<List<Shot>> callback);
+    @GET("shots")
+    Call<List<Shot>> fetchSortedShots(@Query("sort") String sort);
 
     /**
      * Get a shot
      *
      * @param shotId   Shot ID to receive
-     * @param callback Network operation result
+     * @return         Network operation result
      */
-    @GET("/shots/{id}")
-    void getShot(@Path("id") long shotId, Callback<Shot> callback);
+    @GET("shots/{id}")
+    Call<Shot> getShot(@Path("id") long shotId);
 
     /**
      * Create a shot.
@@ -200,21 +211,22 @@ public interface DribbbleShotsService {
      * @param reboundSourceId   An ID of a shot that the new shot is a rebound of.
      *                          The shot must be reboundable and by a user not blocking
      *                          the authenticated user.
-     * @param callback          Network operation result
+     *
+     * @return                  Network operation result
      */
     @Multipart
-    @POST("/shots")
-    void createShot(@Part("title") String title, @Part("image") TypedFile image, @Part("description") String description,
-                    @Part("tags") String[] tags, @Part("team_id") int teamId, @Part("rebound_source_id") int reboundSourceId, Callback<Void> callback);
+    @POST("shots")
+    Call<Void> createShot(@Part("title") String title, @Part("image") RequestBody image, @Part("description") String description,
+                          @Part("tags") String[] tags, @Part("team_id") int teamId, @Part("rebound_source_id") int reboundSourceId);
 
     @Multipart
-    @POST("/shots")
-    void createShot(@Part("title") String title, @Part("image") TypedFile image, @Part("description") String description,
-                    @Part("tags") String[] tags, Callback<Void> callback);
+    @POST("shots")
+    Call<Void> createShot(@Part("title") String title, @Part("image") RequestBody image, @Part("description") String description,
+                          @Part("tags") String[] tags);
 
     @Multipart
-    @POST("/shots")
-    void createShot(@Part("title") String title, @Part("image") TypedFile image, Callback<Void> callback);
+    @POST("shots")
+    Call<Void> createShot(@Part("title") String title, @Part("image") RequestBody image);
 
 
     /**
@@ -242,11 +254,11 @@ public interface DribbbleShotsService {
      *                  Parameters name - the type of keys maintained by this map
      *                  Parameters value - the type of mapped values
      *
-     * @param callback  network operation result
+     * @return          Network operation result
      */
     @Multipart
-    @POST("/shots")
-    void createShot(@PartMap Map<String, Object> partMap, Callback<Void> callback);
+    @POST("shots")
+    Call<Void> createShot(@PartMap Map<String, Object> partMap);
 
     /**
      * Update a shot.
@@ -255,21 +267,22 @@ public interface DribbbleShotsService {
      * The authenticated user must also own the shot.
      *
      * @param shotId   Shot ID to update
-     * @param callback Network operation result
+     *
+     * @return         Network operation result
      */
     @Multipart
-    @PUT("/shots/{id}")
-    void updateShot(@Path("id") long shotId, @Part("title") String title, @Part("description") String description,
-                    @Part("team_id") int teamId, @Part("tags") String[] tags, Callback<Shot> callback);
+    @PUT("shots/{id}")
+    Call<Shot> updateShot(@Path("id") long shotId, @Part("title") String title, @Part("description") String description,
+                          @Part("team_id") int teamId, @Part("tags") String[] tags);
 
     @Multipart
-    @PUT("/shots/{id}")
-    void updateShot(@Path("id") long shotId, @Part("title") String title, @Part("description") String description,
-                    @Part("tags") String[] tags, Callback<Shot> callback);
+    @PUT("shots/{id}")
+    Call<Shot> updateShot(@Path("id") long shotId, @Part("title") String title, @Part("description") String description,
+                          @Part("tags") String[] tags);
 
     @Multipart
-    @PUT("/shots/{id}")
-    void updateShot(@Path("id") long shotId, @Part("description") String description, Callback<Shot> callback);
+    @PUT("shots/{id}")
+    Call<Shot> updateShot(@Path("id") long shotId, @Part("description") String description);
     /**
      * Delete a shot.
      *
@@ -277,10 +290,11 @@ public interface DribbbleShotsService {
      * The authenticated user must also own the shot.
      *
      * @param shotId   Shot ID to delete.
-     * @param callback Network operation result
+     *
+     * @return         Network operation result
      */
-    @DELETE("/shots/{id}")
-    void deleteShot(@Path("id") long shotId, Callback<Void> callback);
+    @DELETE("shots/{id}")
+    Call<Void> deleteShot(@Path("id") long shotId);
 
 
     /************************************** SHOT ATTACHMENTS ************************************************/
@@ -289,10 +303,11 @@ public interface DribbbleShotsService {
      * List the attachments for a shot
      *
      * @param shotId    Shot ID
-     * @param callback  Network operation result
+     *
+     * @return          Network operation result
      */
-    @GET("/shots/{id}/attachments")
-    void getShotAttachments(@Path("id")long shotId, Callback<List<Attachment>> callback);
+    @GET("shots/{id}/attachments")
+    Call<List<Attachment>> getShotAttachments(@Path("id") long shotId);
 
     /**
      * Create a shot attachment.
@@ -303,10 +318,11 @@ public interface DribbbleShotsService {
      * @param shotId    Shot ID to create attachment for
      * @param file      Attachment to be created. <b>Required.</b> The attachment file.
      *                  It must be no larger than 10 megabytes.
-     * @param callback  Network operation result
+     *
+     * @return          Network operation result
      */
-    @POST("/shots/{shot}/attachments")
-    void createShotAttachment(@Path("shot")long shotId, @Part("file") TypedFile file, Callback<Void> callback);
+    @POST("shots/{shot}/attachments")
+    Call<Void> createShotAttachment(@Path("shot") long shotId, @Part("file") RequestBody file);
 
     /**
      * Get a single attachment
@@ -315,10 +331,11 @@ public interface DribbbleShotsService {
      *
      * @param shotId        Shot ID to get attachment for
      * @param attachmentId  Attachment ID to receive
-     * @param callback      Network operation result
+     *
+     * @return              Network operation result
      */
-    @GET("/shots/{shot}/attachments/{id}")
-    void getShotAttachment(@Path("shot")long shotId, @Path("id")long attachmentId, Callback<Attachment> callback);
+    @GET("shots/{shot}/attachments/{id}")
+    Call<Attachment> getShotAttachment(@Path("shot") long shotId, @Path("id") long attachmentId);
 
     /**
      * Delete an attachment
@@ -328,11 +345,11 @@ public interface DribbbleShotsService {
      *
      * @param shotId        Shot ID to delete attachment for
      * @param attachmentId  Attachment ID to delete
-     * @param callback      Network operation result
      *
+     * @return              Network operation result
      */
-    @DELETE("/shots/{shot}/attachments/{id}")
-    void deleteShotAttachment(@Path("shot")long shotId, @Path("id")long attachmentId, Callback<Void> callback);
+    @DELETE("shots/{shot}/attachments/{id}")
+    Call<Void> deleteShotAttachment(@Path("shot") long shotId, @Path("id") long attachmentId);
 
 
     /************************************** SHOT BUCKETS ****************************************************/
@@ -341,10 +358,11 @@ public interface DribbbleShotsService {
      * List buckets for a shot
      *
      * @param shotId    Shot ID with the list of buckets
-     * @param callback  Network operation result
+     *
+     * @return          Network operation result
      */
-    @GET("/shots/{id}/buckets")
-    void getShotBuckets(@Path("id")long shotId, Callback<List<Bucket>> callback);
+    @GET("shots/{id}/buckets")
+    Call<List<Bucket>> getShotBuckets(@Path("id") long shotId);
 
 
     /************************************** SHOT COMMENTS ***************************************************/
@@ -353,11 +371,12 @@ public interface DribbbleShotsService {
      * List of comments for a shot
      *
      * @param shotId   Shot ID with the list of comments
-     * @param callback Network operation result
+     *
+     * @return         Network operation result
      */
 
-    @GET("/shots/{shot}/comments")
-    void getShotComments(@Path("shot") long shotId, Callback<List<Comment>> callback);
+    @GET("shots/{shot}/comments")
+    Call<List<Comment>> getShotComments(@Path("shot") long shotId);
 
 
     /**
@@ -365,11 +384,12 @@ public interface DribbbleShotsService {
      *
      * @param shotId    Shot ID with the given comment
      * @param commentId Comment ID with the list of likes
-     * @param callback  Network operation result
+     *
+     * @return          Network operation result
      */
 
-    @GET("/shots/{shot}/comments/{id}/likes")
-    void getCommentLikes(@Path("shot") long shotId, @Path("id") long commentId, Callback<List<Like>> callback);
+    @GET("shots/{shot}/comments/{id}/likes")
+    Call<List<Like>> getCommentLikes(@Path("shot") long shotId, @Path("id") long commentId);
 
 
     /**
@@ -382,22 +402,24 @@ public interface DribbbleShotsService {
      *
      * @param shotId    Shot ID
      * @param body      Content to update
-     * @param callback  Network operation result
+     *
+     * @return          Network operation result
      */
 
-    @POST("/shots/{shot}/comments")
-    void createComment(@Path("shot") long shotId, @Body Comment body, Callback<Comment> callback);
+    @POST("shots/{shot}/comments")
+    Call<Comment> createComment(@Path("shot") long shotId, @Body Comment body);
 
     /**
      * Get a single comment
      *
      * @param shotId    Shot ID
      * @param commentId Comment ID to return
-     * @param callback  Network operation result
+     *
+     * @return          Network operation result
      */
 
-    @GET("/shots/{shot}/comments/{id}")
-    void getShotComment(@Path("shot") long shotId, @Path("id") long commentId, Callback<Comment> callback);
+    @GET("shots/{shot}/comments/{id}")
+    Call<Comment> getShotComment(@Path("shot") long shotId, @Path("id") long commentId);
 
     /**
      * Update a comment
@@ -408,11 +430,12 @@ public interface DribbbleShotsService {
      * @param shotId    Shot ID
      * @param commentId Comment ID to update
      * @param comment   Comment content
-     * @param callback  Network operation result
+     *
+     * @return          Network operation result
      */
 
-    @PUT("/shots/{shot}/comments/{id}")
-    void updateShotComment(@Path("shot") long shotId, @Path("id") long commentId, @Body Comment comment, Callback<Comment> callback);
+    @PUT("shots/{shot}/comments/{id}")
+    Call<Comment> updateShotComment(@Path("shot") long shotId, @Path("id") long commentId, @Body Comment comment);
 
     /**
      * Delete a comment
@@ -422,11 +445,12 @@ public interface DribbbleShotsService {
      *
      * @param shotId    Shot ID
      * @param commentId Comment ID to remove
-     * @param callback  Network operation result
+     *
+     * @return          Network operation result
      */
 
-    @DELETE("/shots/{shot}/comments/{id}")
-    void deleteShotComment(@Path("shot") long shotId, @Path("id") long commentId, Callback<Void> callback);
+    @DELETE("shots/{shot}/comments/{id}")
+    Call<Void> deleteShotComment(@Path("shot") long shotId, @Path("id") long commentId);
 
     /**
      * Check if you like a comment
@@ -438,14 +462,12 @@ public interface DribbbleShotsService {
      *
      * @param shotId    Shot ID to check if the user likes comment
      * @param commentId Comment ID to check if the user likes it
-     * @param callback  Network operation result
+     *
+     * @return          Network operation result
      */
 
-    @GET("/shots/{shot}/comments/{id}/like")
-    void checkIsLikedShotComment(@Path("shot") long shotId, @Path("id") long commentId, Callback<Like> callback);
-
-    @GET("/shots/{shot}/comments/{id}/like")
-    Response checkIsLikedShotComment(@Path("shot") long shotId, @Path("id") long commentId);
+    @GET("shots/{shot}/comments/{id}/like")
+    Call<Like> checkIsLikedShotComment(@Path("shot") long shotId, @Path("id") long commentId);
 
     /**
      * Like a comment
@@ -454,11 +476,12 @@ public interface DribbbleShotsService {
      *
      * @param shotId    Shot ID to like comment
      * @param commentId Comment ID to like
-     * @param callback  Network operation result
+     *
+     * @return          Network operation result
      */
 
-    @POST("/shots/{shot}/comments/{id}/like")
-    void likeShotComment(@Path("shot") long shotId, @Path("id") long commentId, Callback<Like> callback);
+    @POST("shots/{shot}/comments/{id}/like")
+    Call<Like> likeShotComment(@Path("shot") long shotId, @Path("id") long commentId);
 
     /**
      * Unlike a comment
@@ -467,11 +490,12 @@ public interface DribbbleShotsService {
      *
      * @param shotId    Shot ID
      * @param commentId Comment ID to unlike
-     * @param callback  Network operation result
+     *
+     * @return          Network operation result
      */
 
-    @DELETE("/shots/{shot}/comments/{id}/like")
-    void unlikeShotComment(@Path("shot") long shotId, @Path("id") long commentId, Callback<Void> callback);
+    @DELETE("shots/{shot}/comments/{id}/like")
+    Call<Void> unlikeShotComment(@Path("shot") long shotId, @Path("id") long commentId);
 
 
     /************************************** SHOT LIKES ******************************************************/
@@ -481,11 +505,12 @@ public interface DribbbleShotsService {
      * Get list of likes for a shot
      *
      * @param shotId   Shot ID with the list of likes
-     * @param callback Network operation result
+     *
+     * @return         Network operation result
      */
 
-    @GET("/shots/{id}/likes")
-    void getShotLikes(@Path("id") long shotId, Callback<List<Like>> callback);
+    @GET("shots/{id}/likes")
+    Call<List<Like>> getShotLikes(@Path("id") long shotId);
 
     /**
      * Check if you like a shot.
@@ -495,13 +520,11 @@ public interface DribbbleShotsService {
      * It's better use synchronous method which returns Response.class.
      *
      * @param shotId   Shot ID to check
-     * @param callback Network operation result
+     *
+     * @return         Network operation result
      */
-    @GET("/shots/{id}/like")
-    void checkShotIsLiked(@Path("id") long shotId, Callback<Like> callback);
-
-    @GET("/shots/{id}/like")
-    Response checkShotIsLiked(@Path("id") long shotId);
+    @GET("shots/{id}/like")
+    Call<Like> checkShotIsLiked(@Path("id") long shotId);   // TODO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     /**
      * Like a shot
@@ -509,14 +532,12 @@ public interface DribbbleShotsService {
      * Liking a shot requires the user to be authenticated with the <u>write</u> scope.
      *
      * @param shotId    Shot ID to like
-     * @param callback  Network operation result
+     *
+     * @return          Network operation result
      */
 
-    @POST("/shots/{id}/like")
-    void likeShot(@Path("id") long shotId, Callback<Like> callback);
-
-    @POST("/shots/{id}/like")
-    Response likeShot(@Path("id") long shotId);
+    @POST("shots/{id}/like")
+    Call<Like> likeShot(@Path("id") long shotId);
 
     /**
      * Unlike a shot
@@ -524,11 +545,12 @@ public interface DribbbleShotsService {
      * Unliking a shot requires the user to be authenticated with the <u>write</u> scope.
      *
      * @param shotId    Shot ID to unlike
-     * @param callback  Network operation result
+     *
+     * @return          Network operation result
      */
 
-    @DELETE("/shots/{id}/like")
-    void unlikeShot(@Path("id") long shotId, Callback<Void> callback);
+    @DELETE("shots/{id}/like")
+    Call<Void> unlikeShot(@Path("id") long shotId);
 
 
     /************************************** SHOT PROJECTS ***************************************************/
@@ -537,11 +559,12 @@ public interface DribbbleShotsService {
      * List projects for a shot
      *
      * @param shotId   Shot ID with the list of projects
-     * @param callback Network operation result
+     *
+     * @return         Network operation result
      */
 
-    @GET("/shots/{id}/projects")
-    void getShotProjectsList(@Path("id") long shotId, Callback<List<Project>> callback);
+    @GET("shots/{id}/projects")
+    Call<List<Project>> getShotProjectsList(@Path("id") long shotId);
 
 
     /************************************** SHOT REBOUNDS ***************************************************/
@@ -550,9 +573,10 @@ public interface DribbbleShotsService {
      * List rebounds for a shot
      *
      * @param shotId   Shot ID with the list of rebounds
-     * @param callback Network operation result
+     *
+     * @return         Network operation result
      */
 
-    @GET("/shots/{id}/rebounds")
-    void getShotReboundsList(@Path("id") long shotId, Callback<List<Rebound>> callback);
+    @GET("shots/{id}/rebounds")
+    Call<List<Rebound>> getShotReboundsList(@Path("id") long shotId);
 }

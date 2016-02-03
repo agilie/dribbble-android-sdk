@@ -11,16 +11,19 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.api.client.auth.oauth2.Credential;
-
-import java.util.Arrays;
-
+import com.agilie.dribbblesdk.domain.Shot;
+import com.agilie.dribbblesdk.sample.printable.PrintableShotsCallback;
 import com.agilie.dribbblesdk.service.auth.AuthCredentials;
 import com.agilie.dribbblesdk.service.auth.DribbbleAuthHelper;
 import com.agilie.dribbblesdk.service.auth.DribbbleConstants;
 import com.agilie.dribbblesdk.service.retrofit.DribbbleServiceGenerator;
+import com.google.api.client.auth.oauth2.Credential;
+
+import java.util.Arrays;
+import java.util.List;
+
 import agilie.dribbblesdkexample.R;
-import com.agilie.dribbblesdk.sample.printable.PrintableShotsCallback;
+import retrofit2.Call;
 
 public class ExampleActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -31,7 +34,7 @@ public class ExampleActivity extends AppCompatActivity implements View.OnClickLi
 
     private static final String DRIBBBLE_CLIENT_ID = "<YOUR CLIENT ID HERE>";
     private static final String DRIBBBLE_CLIENT_SECRET = "<YOUR CLIENT SECRET HERE>";
-    private static final String DRIBBBLE_CLIENT_ACCESS_TOKEN = "<YOUR CLIENT ACCESS TOKEN HERE>";
+    private static final String DRIBBBLE_CLIENT_ACCESS_TOKEN = "<YOUR CLIENT ACCESS TOKEN>";
     private static final String DRIBBBLE_CLIENT_REDIRECT_URL = "<YOUR REDIRECT URL HERE>";
 
     private TextView mTextViewResponse;
@@ -124,16 +127,18 @@ public class ExampleActivity extends AppCompatActivity implements View.OnClickLi
 
     private void getMyShot() {
         showProgressBar();
-        DribbbleServiceGenerator
+        Call<List<Shot>> shotsCall = DribbbleServiceGenerator
                 .getDribbbleUserService(authToken)
-                .getAuthenticatedUsersShots(NUMBER_OF_PAGES, SHOTS_PER_PAGE, printableShotsCallback);
+                .getAuthenticatedUsersShots(NUMBER_OF_PAGES, SHOTS_PER_PAGE);
+        shotsCall.enqueue(printableShotsCallback);
     }
 
     public void getRecentShot() {
         showProgressBar();
-        DribbbleServiceGenerator
+        Call<List<Shot>> shotsCall = DribbbleServiceGenerator
                 .getDribbbleShotService(DRIBBBLE_CLIENT_ACCESS_TOKEN)
-                .fetchShots(NUMBER_OF_PAGES, SHOTS_PER_PAGE, printableShotsCallback);
+                .fetchShots(NUMBER_OF_PAGES, SHOTS_PER_PAGE);
+        shotsCall.enqueue(printableShotsCallback);
     }
 
     /* Auth */

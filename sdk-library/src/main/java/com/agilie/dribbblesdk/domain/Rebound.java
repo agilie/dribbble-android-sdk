@@ -6,6 +6,9 @@ import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.Date;
 
+/**
+ * Created by tatyanasoldatkina on 3/26/15.
+ */
 public class Rebound implements Serializable {
 
     @SerializedName("id")

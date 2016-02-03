@@ -6,9 +6,9 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Created by tatyanasoldatkina on 3/25/15.
+ * Created by AlexZandR on 1/18/16.
  */
-public class Like implements Serializable {
+public class Follower implements Serializable {
 
     @SerializedName("id")
     private long id;
@@ -16,11 +16,8 @@ public class Like implements Serializable {
     @SerializedName("created_at")
     private Date createdAt;
 
-    @SerializedName("user")
+    @SerializedName("follower")
     private User user;
-
-    @SerializedName("shot")
-    private Shot shot;
 
     public User getUser() {
         return user;
@@ -28,14 +25,6 @@ public class Like implements Serializable {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public Shot getShot() {
-        return shot;
-    }
-
-    public void setShot(Shot shot) {
-        this.shot = shot;
     }
 
     public Date getCreatedAt() {

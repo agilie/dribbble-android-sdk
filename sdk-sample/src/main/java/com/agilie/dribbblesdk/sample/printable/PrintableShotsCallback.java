@@ -2,9 +2,9 @@ package com.agilie.dribbblesdk.sample.printable;
 
 import android.widget.TextView;
 
-import java.util.List;
-
 import com.agilie.dribbblesdk.domain.Shot;
+
+import java.util.List;
 
 public class PrintableShotsCallback extends PrintableCallback<List<Shot>> {
 

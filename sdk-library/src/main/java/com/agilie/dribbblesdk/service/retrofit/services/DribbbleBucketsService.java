@@ -1,38 +1,44 @@
 package com.agilie.dribbblesdk.service.retrofit.services;
 
-import java.util.List;
-
 import com.agilie.dribbblesdk.domain.Bucket;
 import com.agilie.dribbblesdk.domain.Shot;
-import retrofit.Callback;
-import retrofit.http.Body;
-import retrofit.http.DELETE;
-import retrofit.http.GET;
-import retrofit.http.POST;
-import retrofit.http.PUT;
-import retrofit.http.Path;
-import retrofit.http.Query;
 
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.http.Body;
+import retrofit2.http.DELETE;
+import retrofit2.http.GET;
+import retrofit2.http.POST;
+import retrofit2.http.PUT;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
+
+/**
+ * Created by serg on 7/9/15.
+ */
 public interface DribbbleBucketsService {
 
     /**
      * Get a bucket
      *
      * @param bucketId  Bucket ID
-     * @param callback  Network operation result
+     *
+     * @return          Network operation result
      */
-    @GET("/buckets/{id}")
-    void getBucket(@Path("id")long bucketId, Callback<Bucket> callback);
+    @GET("buckets/{id}")
+    Call<Bucket> getBucket(@Path("id") long bucketId);
 
     /**
      * Create a bucket.
      * Creating a bucket requires the user to be authenticated with the <u>write</u> scope
      *
      * @param bucket    The bucket to create. Field <code>Bucket.name</code> is required
-     * @param callback  Network operation result
+     *
+     * @return          Network operation result
      */
-    @POST("/buckets")
-    void createBucket(@Body Bucket bucket, Callback<Bucket> callback);
+    @POST("buckets")
+    Call<Bucket> createBucket(@Body Bucket bucket);
 
     /**
      * Update a bucket.
@@ -40,20 +46,22 @@ public interface DribbbleBucketsService {
      *
      * @param bucketId  Bucket ID to update
      * @param bucket    The bucket to update
-     * @param callback  Network operation result
+     *
+     * @return          Network operation result
      */
-    @PUT("/buckets/{id}")
-    void updateBucket(@Path("id") long bucketId, @Body Bucket bucket, Callback<Bucket> callback);
+    @PUT("buckets/{id}")
+    Call<Bucket> updateBucket(@Path("id") long bucketId, @Body Bucket bucket);
 
     /**
      * Delete a bucket.
      * Deleting a bucket requires the user to be authenticated with the <u>write</u> scope. The authenticated user must also own the bucket
      *
      * @param bucketId  Bucket ID to delete
-     * @param callback  Network operation result
+     *
+     * @return          Network operation result
      */
-    @DELETE("/buckets/{id}")
-    void deleteBucket(@Path("id") long bucketId, Callback<Void> callback);
+    @DELETE("buckets/{id}")
+    Call<Void> deleteBucket(@Path("id") long bucketId);
 
     /************************************** BUCKET SHOTS ************************************************/
 
@@ -61,10 +69,11 @@ public interface DribbbleBucketsService {
      * List shots for a bucket
      *
      * @param bucketId  Bucket ID
-     * @param callback  Network operation result
+     *
+     * @return          Network operation result
      */
-    @GET("/buckets/{id}/shots")
-    void getShotsForBucket(@Path("id")long bucketId, Callback<List<Shot>> callback);
+    @GET("buckets/{id}/shots")
+    Call<List<Shot>> getShotsForBucket(@Path("id") long bucketId);
 
     /**
      * Add a shot to a bucket.
@@ -73,10 +82,11 @@ public interface DribbbleBucketsService {
      *
      * @param shotId        Shot ID to add
      * @param bucketId      Bucket ID
-     * @param callback      Network operation result
+     *
+     * @return              Network operation result
      */
-    @PUT("/buckets/{id}/shots")
-    void addShotToBucket(@Path("id")long bucketId, @Query("shot_id") long shotId, Callback<Void> callback);
+    @PUT("buckets/{id}/shots")
+    Call<Void> addShotToBucket(@Path("id") long bucketId, @Query("shot_id") long shotId);
 
     /**
      * Remove a shot from a bucket
@@ -85,8 +95,9 @@ public interface DribbbleBucketsService {
      *
      * @param shotId        Shot ID to remove
      * @param bucketId      Bucket ID
-     * @param callback      Network operation result
+     *
+     * @return              Network operation result
      */
-    @DELETE("/buckets/{id}/shots")
-    void removeShotFromBucket(@Path("id")long bucketId, @Query("shot_id") long shotId, Callback<Void> callback);
+    @DELETE("buckets/{id}/shots")
+    Call<Void> removeShotFromBucket(@Path("id") long bucketId, @Query("shot_id") long shotId);
 }
