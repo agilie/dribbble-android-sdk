@@ -2,6 +2,10 @@
 
 Dribbble Android SDK is an unofficial wrapper for [Dribbble API v1](http://developer.dribbble.com/v1/).
 
+## Link to iOS repo
+
+Check out our [Dribbble iOS SDK](https://github.com/agilie/dribbble-ios-sdk)
+
 ## Download
 
 - <b>Android Studio</b>
@@ -30,6 +34,11 @@ Don't forget to fill the credentials to use Dribbble API:
     private static final String DRIBBBLE_CLIENT_ACCESS_TOKEN = "<YOUR CLIENT ACCESS TOKEN HERE>";
     private static final String DRIBBBLE_CLIENT_REDIRECT_URL = "<YOUR REDIRECT URL HERE>";
 ```
+Authorization isn't required, you can use non-authorized access for some methods. In this case, API client uses default access token provided by Dribbble. You can get the app access token, client id and secret keys on your Dribbble app page, check out the next links: 
+
+- Register your app on https://dribbble.com/account/applications/new
+
+- Documentation: http://developer.dribbble.com/v1/
 
 ## Dependencies
 
