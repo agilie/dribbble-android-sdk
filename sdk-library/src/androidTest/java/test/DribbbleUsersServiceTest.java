@@ -2,25 +2,23 @@ package test;
 
 import android.test.InstrumentationTestCase;
 
+import com.agilie.dribbblesdk.domain.Bucket;
+import com.agilie.dribbblesdk.domain.Followee;
+import com.agilie.dribbblesdk.domain.Like;
+import com.agilie.dribbblesdk.domain.Project;
+import com.agilie.dribbblesdk.domain.Shot;
+import com.agilie.dribbblesdk.domain.Team;
+import com.agilie.dribbblesdk.domain.User;
+import com.agilie.dribbblesdk.service.retrofit.DribbbleServiceGenerator;
+import com.agilie.dribbblesdk.service.retrofit.services.DribbbleUserService;
+
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
-import agilie.dribbblesdk.domain.Bucket;
-import agilie.dribbblesdk.domain.Followee;
-import agilie.dribbblesdk.domain.Like;
-import agilie.dribbblesdk.domain.Project;
-import agilie.dribbblesdk.domain.Shot;
-import agilie.dribbblesdk.domain.Team;
-import agilie.dribbblesdk.domain.User;
-import agilie.dribbblesdk.service.retrofit.DribbbleServiceGenerator;
-import agilie.dribbblesdk.service.retrofit.services.DribbbleUserService;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-/**
- * Created by admin on 7/15/15.
- */
 public class DribbbleUsersServiceTest extends InstrumentationTestCase {
 
     private static final String AUTH_TOKEN_FOR_TEST = "3f4b08a584a0b7cb770990ca5d83050a9761d48d0611dbfc4b944ecf1cbac7a2";

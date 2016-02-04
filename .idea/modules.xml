@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/DribbbleSDK.iml" filepath="$PROJECT_DIR$/DribbbleSDK.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dribbble-android-sdk.iml" filepath="$PROJECT_DIR$/dribbble-android-sdk.iml" />
       <module fileurl="file://$PROJECT_DIR$/oAuth/oAuth.iml" filepath="$PROJECT_DIR$/oAuth/oAuth.iml" />
       <module fileurl="file://$PROJECT_DIR$/sdk-library/sdk-library.iml" filepath="$PROJECT_DIR$/sdk-library/sdk-library.iml" />
       <module fileurl="file://$PROJECT_DIR$/sdk-sample/sdk-sample.iml" filepath="$PROJECT_DIR$/sdk-sample/sdk-sample.iml" />

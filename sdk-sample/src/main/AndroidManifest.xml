@@ -8,7 +8,7 @@
     <application
         android:icon="@drawable/coins">
         <activity
-            android:name=".activity.ExampleActivity"
+            android:name="com.agilie.dribbblesdk.sample.activity.ExampleActivity"
             android:label="@string/title_activity_example"
             android:theme="@style/Theme.AppCompat.Light"
             android:screenOrientation="portrait">
