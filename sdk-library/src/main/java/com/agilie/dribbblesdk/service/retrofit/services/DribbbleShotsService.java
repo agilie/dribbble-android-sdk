@@ -524,7 +524,7 @@ public interface DribbbleShotsService {
      * @return         Network operation result
      */
     @GET("shots/{id}/like")
-    Call<Like> checkShotIsLiked(@Path("id") long shotId);   // TODO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    Call<Like> checkShotIsLiked(@Path("id") long shotId);
 
     /**
      * Like a shot
