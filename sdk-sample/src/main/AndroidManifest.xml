@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="agilie.dribbblesdkexample" >
+<manifest package="agilie.dribbblesdkexample"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
+        android:name="com.agilie.dribbblesdk.sample.activity.DribbbleSdkSampleApplication"
         android:icon="@drawable/coins">
         <activity
-            android:name="com.agilie.dribbblesdk.sample.activity.ExampleActivity"
+            android:name="com.agilie.dribbblesdk.sample.activity.DribbbleSdkSampleActivity"
             android:label="@string/title_activity_example"
-            android:theme="@style/Theme.AppCompat.Light"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
     </application>
