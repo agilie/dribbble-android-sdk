@@ -9,7 +9,7 @@ configurations {
 
 android {
   compileSdkVersion 21
-  buildToolsVersion "21.1.2"
+  buildToolsVersion '25.0.0'
 
   lintOptions {
     // temporary fix for https://code.google.com/p/android/issues/detail?id=64014
