@@ -314,6 +314,11 @@ Call<List<Team>> getAuthenticatedUsersTeams(@Query("page") int page);
 - [Retrofit](https://github.com/square/retrofit)
 - [Android OAuth Client](https://github.com/wuman/android-oauth-client)
 
+## Troubleshooting
+
+Problems? Check the [Issues](https://github.com/agilie/dribbble-android-sdk/issues) block
+to find the solution or create an new issue that we will fix asap. 
+
 ## Author
 
 This library is open-sourced by  [Agilie Team](https://www.agilie.com) <info@agilie.com>
