@@ -318,6 +318,14 @@ Call<List<Team>> getAuthenticatedUsersTeams(@Query("page") int page);
 
 This library is open-sourced by  [Agilie Team](https://www.agilie.com) <info@agilie.com>
 
+## Contributors
+
+- [Alexander Kotsuba](https://github.com/akotsuba)
+
+## Contact us
+
+<android@agilie.com>
+
 ## License
 
 The [MIT](LICENSE.md) License (MIT) Copyright © 2017 [Agilie Team](https://www.agilie.com)
