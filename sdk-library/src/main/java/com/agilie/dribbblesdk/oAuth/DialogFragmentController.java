@@ -1,5 +1,5 @@
 
-package com.wuman.android.auth;
+package com.agilie.dribbblesdk.oAuth;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -15,7 +15,7 @@ import com.google.api.client.auth.oauth2.AuthorizationCodeRequestUrl;
 import com.google.api.client.auth.oauth2.BrowserClientRequestUrl;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.util.Preconditions;
-import com.wuman.android.auth.oauth2.implicit.ImplicitResponseUrl;
+import com.agilie.dribbblesdk.oAuth.oauth2.implicit.ImplicitResponseUrl;
 
 import java.io.IOException;
 import java.util.concurrent.CancellationException;

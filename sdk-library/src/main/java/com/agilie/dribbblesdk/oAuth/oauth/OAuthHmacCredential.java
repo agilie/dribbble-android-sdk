@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.wuman.android.auth.oauth;
+package com.agilie.dribbblesdk.oAuth.oauth;
 
 import com.google.api.client.auth.oauth.OAuthHmacSigner;
 import com.google.api.client.auth.oauth.OAuthParameters;

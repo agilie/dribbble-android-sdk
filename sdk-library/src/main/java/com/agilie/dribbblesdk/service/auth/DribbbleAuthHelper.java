@@ -11,12 +11,12 @@ import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.json.jackson.JacksonFactory;
-import com.wuman.android.auth.AuthorizationFlow;
-import com.wuman.android.auth.AuthorizationUIController;
-import com.wuman.android.auth.DialogFragmentController;
-import com.wuman.android.auth.OAuthManager;
-import com.wuman.android.auth.oauth2.implicit.ImplicitResponseUrl;
-import com.wuman.android.auth.oauth2.store.SharedPreferencesCredentialStore;
+import com.agilie.dribbblesdk.oAuth.AuthorizationFlow;
+import com.agilie.dribbblesdk.oAuth.AuthorizationUIController;
+import com.agilie.dribbblesdk.oAuth.DialogFragmentController;
+import com.agilie.dribbblesdk.oAuth.OAuthManager;
+import com.agilie.dribbblesdk.oAuth.oauth2.implicit.ImplicitResponseUrl;
+import com.agilie.dribbblesdk.oAuth.oauth2.store.SharedPreferencesCredentialStore;
 
 import java.io.IOException;
 import java.util.concurrent.CancellationException;

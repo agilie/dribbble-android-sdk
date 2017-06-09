@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.wuman.android.auth.oauth2.explicit;
+package com.agilie.dribbblesdk.oAuth.oauth2.explicit;
 
 import com.google.api.client.auth.oauth2.AuthorizationCodeTokenRequest;
 import com.google.api.client.auth.oauth2.TokenErrorResponse;

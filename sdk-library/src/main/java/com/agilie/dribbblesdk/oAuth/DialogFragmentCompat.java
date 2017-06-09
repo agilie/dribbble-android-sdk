@@ -1,5 +1,5 @@
 
-package com.wuman.android.auth;
+package com.agilie.dribbblesdk.oAuth;
 
 import android.annotation.TargetApi;
 import android.app.Dialog;

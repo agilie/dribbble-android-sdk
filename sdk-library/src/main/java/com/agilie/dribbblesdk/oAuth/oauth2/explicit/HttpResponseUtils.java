@@ -1,5 +1,5 @@
 
-package com.wuman.android.auth.oauth2.explicit;
+package com.agilie.dribbblesdk.oAuth.oauth2.explicit;
 
 import com.google.api.client.http.HttpMethods;
 import com.google.api.client.http.HttpResponse;

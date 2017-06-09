@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.wuman.android.auth.oauth2.explicit;
+package com.agilie.dribbblesdk.oAuth.oauth2.explicit;
 
 import com.google.api.client.auth.oauth2.AuthorizationCodeTokenRequest;
 import com.google.api.client.auth.oauth2.ClientParametersAuthentication;
@@ -30,7 +30,7 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.UrlEncodedContent;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
-import com.wuman.android.auth.OAuthConstants;
+import com.agilie.dribbblesdk.oAuth.OAuthConstants;
 
 import java.io.IOException;
 import java.io.StringReader;

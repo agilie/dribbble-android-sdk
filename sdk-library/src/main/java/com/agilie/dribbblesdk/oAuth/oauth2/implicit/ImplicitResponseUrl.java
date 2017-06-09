@@ -1,5 +1,5 @@
 
-package com.wuman.android.auth.oauth2.implicit;
+package com.agilie.dribbblesdk.oAuth.oauth2.implicit;
 
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.UrlEncodedParser;

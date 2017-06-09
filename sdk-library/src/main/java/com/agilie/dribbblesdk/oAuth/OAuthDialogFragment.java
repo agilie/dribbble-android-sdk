@@ -1,5 +1,5 @@
 
-package com.wuman.android.auth;
+package com.agilie.dribbblesdk.oAuth;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -33,8 +33,8 @@ import com.google.api.client.auth.oauth.OAuthAuthorizeTemporaryTokenUrl;
 import com.google.api.client.auth.oauth2.AuthorizationCodeRequestUrl;
 import com.google.api.client.auth.oauth2.AuthorizationCodeResponseUrl;
 import com.google.api.client.http.GenericUrl;
-import com.wuman.android.auth.oauth.OAuth10aResponseUrl;
-import com.wuman.android.auth.oauth2.implicit.ImplicitResponseUrl;
+import com.agilie.dribbblesdk.oAuth.oauth.OAuth10aResponseUrl;
+import com.agilie.dribbblesdk.oAuth.oauth2.implicit.ImplicitResponseUrl;
 
 import java.io.IOException;
 import java.util.Set;

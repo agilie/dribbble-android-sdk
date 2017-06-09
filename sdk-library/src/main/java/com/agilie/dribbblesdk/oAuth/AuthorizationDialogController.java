@@ -1,5 +1,5 @@
 
-package com.wuman.android.auth;
+package com.agilie.dribbblesdk.oAuth;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 
-import com.wuman.android.auth.oauth2.implicit.ImplicitResponseUrl;
+import com.agilie.dribbblesdk.oAuth.oauth2.implicit.ImplicitResponseUrl;
 
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -69,7 +69,7 @@ public interface AuthorizationDialogController extends AuthorizationUIController
      * 
      * @param url
      * @param view
-     * @param current page loading progress, represented by an integer between 0
+     * @param progress page loading progress, represented by an integer between 0
      *            and 100.
      * @return {@code true} if all UI is handled by the subclass implementation
      *         and the default implementation of the parent class should be

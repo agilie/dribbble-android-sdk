@@ -1,5 +1,5 @@
 
-package com.wuman.android.auth.oauth;
+package com.agilie.dribbblesdk.oAuth.oauth;
 
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.util.Key;

@@ -12,13 +12,13 @@
  * the License.
  */
 
-package com.wuman.android.auth.oauth2.store;
+package com.agilie.dribbblesdk.oAuth.oauth2.store;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.json.GenericJson;
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.Key;
-import com.wuman.android.auth.oauth.OAuthHmacCredential;
+import com.agilie.dribbblesdk.oAuth.oauth.OAuthHmacCredential;
 
 /**
  * {@link Beta} <br/>

@@ -1,5 +1,5 @@
 
-package com.wuman.android.auth.oauth2.store;
+package com.agilie.dribbblesdk.oAuth.oauth2.store;
 
 import android.annotation.TargetApi;
 import android.content.Context;

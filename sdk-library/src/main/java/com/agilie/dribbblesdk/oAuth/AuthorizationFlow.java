@@ -1,5 +1,5 @@
 
-package com.wuman.android.auth;
+package com.agilie.dribbblesdk.oAuth;
 
 import com.google.api.client.auth.oauth.OAuthAuthorizeTemporaryTokenUrl;
 import com.google.api.client.auth.oauth.OAuthCredentialsResponse;
@@ -27,9 +27,9 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.Clock;
-import com.wuman.android.auth.oauth.OAuthHmacCredential;
-import com.wuman.android.auth.oauth2.explicit.LenientAuthorizationCodeTokenRequest;
-import com.wuman.android.auth.oauth2.implicit.ImplicitResponseUrl;
+import com.agilie.dribbblesdk.oAuth.oauth.OAuthHmacCredential;
+import com.agilie.dribbblesdk.oAuth.oauth2.explicit.LenientAuthorizationCodeTokenRequest;
+import com.agilie.dribbblesdk.oAuth.oauth2.implicit.ImplicitResponseUrl;
 
 import java.io.IOException;
 import java.util.Collection;
