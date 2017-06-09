@@ -140,21 +140,18 @@ Call<Shot> getShot(@Path("id") long shotId);
 
 @Multipart
 @POST("shots")
-Call<Void> createShot(@Part("title") String title, @Part("image") RequestBody image, @Part("description") String description,
+Call<Void> createShot(@Part("title") String title, @Part MultipartBody.Part image, @Part("description") String description,
                           @Part("tags") String[] tags, @Part("team_id") int teamId, @Part("rebound_source_id") int reboundSourceId);
-                          
 @Multipart
 @POST("shots")
-Call<Void> createShot(@Part("title") String title, @Part("image") RequestBody image, @Part("description") String description,
+Call<Void> createShot(@Part("title") String title, @Part MultipartBody.Part image, @Part("description") String description,
                           @Part("tags") String[] tags);
-                          
 @Multipart
 @POST("shots")
-Call<Void> createShot(@Part("title") String title, @Part("image") RequestBody image);
+Call<Void> createShot(@Part("title") String title, @Part MultipartBody.Part image);
 
 @Multipart
-@POST("shots")
-Call<Void> createShot(@PartMap Map<String, Object> partMap);
+@POST("shots")Call<Void> createShot(@PartMap Map<String, Object> partMap);
 
 @Multipart
 @PUT("shots/{id}")
