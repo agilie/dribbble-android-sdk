@@ -4,37 +4,44 @@ import android.test.InstrumentationTestCase;
 
 import com.agilie.dribbblesdk.domain.Bucket;
 import com.agilie.dribbblesdk.domain.Followee;
+import com.agilie.dribbblesdk.domain.Follower;
 import com.agilie.dribbblesdk.domain.Like;
 import com.agilie.dribbblesdk.domain.Project;
 import com.agilie.dribbblesdk.domain.Shot;
 import com.agilie.dribbblesdk.domain.Team;
 import com.agilie.dribbblesdk.domain.User;
-import com.agilie.dribbblesdk.service.retrofit.DribbbleServiceGenerator;
+import com.agilie.dribbblesdk.service.retrofit.DribbbleWebServiceHelper;
 import com.agilie.dribbblesdk.service.retrofit.services.DribbbleUserService;
 
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import okhttp3.OkHttpClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class DribbbleUsersServiceTest extends InstrumentationTestCase {
 
     private static final String AUTH_TOKEN_FOR_TEST = "3f4b08a584a0b7cb770990ca5d83050a9761d48d0611dbfc4b944ecf1cbac7a2";
 
-//    private static final long TEST_USER_ID = 793483;
+    //    private static final long TEST_USER_ID = 793483;
     private static final long[] TEST_USERS_ID = {107759, 41719, 3518, 108482, 22069};
     private static final long TEST_FOLLOWED_USER_ID = 400583;
 
     private DribbbleUserService authorizedDribbbleService;
     private DribbbleUserService dribbbleService;
 
-    public DribbbleUsersServiceTest() {
-        authorizedDribbbleService = DribbbleServiceGenerator.getDribbbleUserService(AUTH_TOKEN_FOR_TEST);
-        dribbbleService = DribbbleServiceGenerator.getDribbbleUserService(AUTH_TOKEN_FOR_TEST);
-    }
+    private Retrofit retrofit;
 
+    public DribbbleUsersServiceTest() {
+        OkHttpClient.Builder okHttpClientBuilder = DribbbleWebServiceHelper.getOkHttpClientBuilder(AUTH_TOKEN_FOR_TEST);
+        Retrofit retrofit = DribbbleWebServiceHelper.getRetrofitBuilder(okHttpClientBuilder).build();
+
+        authorizedDribbbleService = DribbbleWebServiceHelper.getDribbbleUserService(retrofit);
+        dribbbleService = DribbbleWebServiceHelper.getDribbbleUserService(retrofit);
+    }
 
 
     public void testGetSingleUser() throws Throwable {
@@ -42,19 +49,20 @@ public class DribbbleUsersServiceTest extends InstrumentationTestCase {
         runTestOnUiThread(new Runnable() {
             @Override
             public void run() {
-                dribbbleService.getSingleUser(TEST_USERS_ID[4], new Callback<User>() {
-                    @Override
-                    public void success(User user, Response response) {
-                        assertNotNull(user);
-                        signal.countDown();
-                    }
+                dribbbleService.getSingleUser(TEST_USERS_ID[4])
+                        .enqueue(new Callback<User>() {
+                            @Override
+                            public void onResponse(Call<User> call, Response<User> response) {
+                                assertNotNull(response.body());
+                                signal.countDown();
+                            }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        assertTrue("getSingleUser is failed", false);
-                        signal.countDown();
-                    }
-                });
+                            @Override
+                            public void onFailure(Call<User> call, Throwable t) {
+                                assertTrue("getSingleUser is failed", false);
+                                signal.countDown();
+                            }
+                        });
             }
         });
 
@@ -65,19 +73,20 @@ public class DribbbleUsersServiceTest extends InstrumentationTestCase {
         final CountDownLatch signal = new CountDownLatch(1);
         runTestOnUiThread(new Runnable() {
             public void run() {
-                authorizedDribbbleService.fetchAuthenticatedUser(new Callback<User>() {
-                    @Override
-                    public void success(final User user, Response response) {
-                        assertNotNull(user);
-                        signal.countDown();
-                    }
+                authorizedDribbbleService.fetchAuthenticatedUser()
+                        .enqueue(new Callback<User>() {
+                            @Override
+                            public void onResponse(Call<User> call, Response<User> response) {
+                                assertNotNull(response.body());
+                                signal.countDown();
+                            }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        assertTrue("fetchAuthorizaedUser is failed", false);
-                        signal.countDown();
-                    }
-                });
+                            @Override
+                            public void onFailure(Call<User> call, Throwable t) {
+                                assertTrue("fetchAuthorizaedUser is failed", false);
+                                signal.countDown();
+                            }
+                        });
             }
         });
 
@@ -91,19 +100,20 @@ public class DribbbleUsersServiceTest extends InstrumentationTestCase {
         runTestOnUiThread(new Runnable() {
             @Override
             public void run() {
-                dribbbleService.getUsersBuckets(TEST_USERS_ID[0], new Callback<List<Bucket>>() {
-                    @Override
-                    public void success(List<Bucket> buckets, Response response) {
-                        assertNotNull(buckets);
-                        signal.countDown();
-                    }
+                dribbbleService.getUsersBuckets(TEST_USERS_ID[0])
+                        .enqueue(new Callback<List<Bucket>>() {
+                            @Override
+                            public void onResponse(Call<List<Bucket>> call, Response<List<Bucket>> response) {
+                                assertNotNull(response.body());
+                                signal.countDown();
+                            }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        assertTrue("getUsersBuckets is failed", false);
-                        signal.countDown();
-                    }
-                });
+                            @Override
+                            public void onFailure(Call<List<Bucket>> call, Throwable t) {
+                                assertTrue("getUsersBuckets is failed", false);
+                                signal.countDown();
+                            }
+                        });
             }
         });
 
@@ -115,19 +125,20 @@ public class DribbbleUsersServiceTest extends InstrumentationTestCase {
         runTestOnUiThread(new Runnable() {
             @Override
             public void run() {
-                authorizedDribbbleService.getAuthenticatedUsersBuckets(new Callback<List<Bucket>>() {
-                    @Override
-                    public void success(List<Bucket> buckets, Response response) {
-                        assertNotNull(buckets);
-                        signal.countDown();
-                    }
+                authorizedDribbbleService.getAuthenticatedUsersBuckets()
+                        .enqueue(new Callback<List<Bucket>>() {
+                            @Override
+                            public void onResponse(Call<List<Bucket>> call, Response<List<Bucket>> response) {
+                                assertNotNull(response.body());
+                                signal.countDown();
+                            }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        assertTrue("getAuthenticatedUsersBuckets is failed", false);
-                        signal.countDown();
-                    }
-                });
+                            @Override
+                            public void onFailure(Call<List<Bucket>> call, Throwable t) {
+                                assertTrue("getAuthenticatedUsersBuckets is failed", false);
+                                signal.countDown();
+                            }
+                        });
             }
         });
 
@@ -141,19 +152,20 @@ public class DribbbleUsersServiceTest extends InstrumentationTestCase {
         runTestOnUiThread(new Runnable() {
             @Override
             public void run() {
-                dribbbleService.getUsersFollowers(TEST_USERS_ID[1], new Callback<List<Followee>>() {
-                    @Override
-                    public void success(List<Followee> followees, Response response) {
-                        assertNotNull(followees);
-                        signal.countDown();
-                    }
+                dribbbleService.getUsersFollowers(TEST_USERS_ID[1], 1, 1)
+                        .enqueue(new Callback<List<Follower>>() {
+                            @Override
+                            public void onResponse(Call<List<Follower>> call, Response<List<Follower>> response) {
+                                assertNotNull(response.body());
+                                signal.countDown();
+                            }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        assertTrue("getUsersFollowers is failed", false);
-                        signal.countDown();
-                    }
-                });
+                            @Override
+                            public void onFailure(Call<List<Follower>> call, Throwable t) {
+                                assertTrue("getUsersFollowers is failed", false);
+                                signal.countDown();
+                            }
+                        });
             }
         });
 
@@ -165,19 +177,20 @@ public class DribbbleUsersServiceTest extends InstrumentationTestCase {
         runTestOnUiThread(new Runnable() {
             @Override
             public void run() {
-                authorizedDribbbleService.getAuthenticatedUsersFollowers(new Callback<List<Followee>>() {
-                    @Override
-                    public void success(List<Followee> followees, Response response) {
-                        assertNotNull(followees);
-                        signal.countDown();
-                    }
+                authorizedDribbbleService.getAuthenticatedUsersFollowers(1, 1)
+                        .enqueue(new Callback<List<Follower>>() {
+                            @Override
+                            public void onResponse(Call<List<Follower>> call, Response<List<Follower>> response) {
+                                assertNotNull(response.body());
+                                signal.countDown();
+                            }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        assertTrue("getAuthenticatedUsersFollowers is failed", false);
-                        signal.countDown();
-                    }
-                });
+                            @Override
+                            public void onFailure(Call<List<Follower>> call, Throwable t) {
+                                assertTrue("getAuthenticatedUsersFollowers is failed", false);
+                                signal.countDown();
+                            }
+                        });
             }
         });
 
@@ -191,32 +204,33 @@ public class DribbbleUsersServiceTest extends InstrumentationTestCase {
             @Override
             public void run() {
 
-                dribbbleService.getFollowingByUser(TEST_USERS_ID[3], new Callback<List<Followee>>() {
-                    @Override
-                    public void success(List<Followee> followees, Response response) {
-                        assertNotNull(followees);
-                        long followeeId = followees.get(0).getUser().getId();
-
-                        dribbbleService.checkUserIsFollowingAnother(TEST_USERS_ID[3], followeeId, new Callback<Void>() {
+                dribbbleService.getFollowingByUser(TEST_USERS_ID[3])
+                        .enqueue(new Callback<List<Followee>>() {
                             @Override
-                            public void success(Void aVoid, Response response) {
-                                signal.countDown();
+                            public void onResponse(Call<List<Followee>> call, Response<List<Followee>> response) {
+                                assertNotNull(response.body());
+                                long followeeId = response.body().get(0).getUser().getId();
+                                dribbbleService.checkUserIsFollowingAnother(TEST_USERS_ID[3], followeeId)
+                                        .enqueue(new Callback<Void>() {
+                                            @Override
+                                            public void onResponse(Call<Void> call, Response<Void> response) {
+                                                signal.countDown();
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<Void> call, Throwable t) {
+                                                assertTrue("checkUserIsFollowingAnother is failed", false);
+                                                signal.countDown();
+                                            }
+                                        });
                             }
 
                             @Override
-                            public void failure(RetrofitError error) {
-                                assertTrue("checkUserIsFollowingAnother is failed", false);
+                            public void onFailure(Call<List<Followee>> call, Throwable t) {
+                                assertTrue("getFollowingByUser is failed", false);
                                 signal.countDown();
                             }
                         });
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        assertTrue("getFollowingByUser is failed", false);
-                        signal.countDown();
-                    }
-                });
             }
         });
         signal.await();
@@ -227,32 +241,33 @@ public class DribbbleUsersServiceTest extends InstrumentationTestCase {
         runTestOnUiThread(new Runnable() {
             @Override
             public void run() {
-                authorizedDribbbleService.getFollowingByCurrentUser(new Callback<List<Followee>>() {
-                    @Override
-                    public void success(List<Followee> followees, Response response) {
-                        assertNotNull(followees);
-                        long followeeId = followees.get(0).getUser().getId();
-
-                        authorizedDribbbleService.checkUserIsFollowed(followeeId, new Callback<Void>() {
+                authorizedDribbbleService.getFollowingByCurrentUser()
+                        .enqueue(new Callback<List<Followee>>() {
                             @Override
-                            public void success(Void aVoid, Response response) {
-                                signal.countDown();
+                            public void onResponse(Call<List<Followee>> call, Response<List<Followee>> response) {
+                                assertNotNull(response.body());
+                                long followeeId = response.body().get(0).getUser().getId();
+                                authorizedDribbbleService.checkUserIsFollowed(followeeId)
+                                        .enqueue(new Callback<Void>() {
+                                            @Override
+                                            public void onResponse(Call<Void> call, Response<Void> response) {
+                                                signal.countDown();
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<Void> call, Throwable t) {
+                                                assertTrue("checkUserIsFollowed is failed", false);
+                                                signal.countDown();
+                                            }
+                                        });
                             }
 
                             @Override
-                            public void failure(RetrofitError error) {
-                                assertTrue("checkUserIsFollowed is failed", false);
+                            public void onFailure(Call<List<Followee>> call, Throwable t) {
+                                assertTrue("getFollowingByCurrentUser is failed", false);
                                 signal.countDown();
                             }
                         });
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        assertTrue("getFollowingByCurrentUser is failed", false);
-                        signal.countDown();
-                    }
-                });
             }
         });
 
@@ -264,61 +279,56 @@ public class DribbbleUsersServiceTest extends InstrumentationTestCase {
         runTestOnUiThread(new Runnable() {
             @Override
             public void run() {
-                authorizedDribbbleService.shotsForUserFollowedByUser(new Callback<List<Shot>>() {
-                    @Override
-                    public void success(List<Shot> shots, Response response) {
-                        assertNotNull(shots);
-                        signal.countDown();
-                    }
+                authorizedDribbbleService.shotsForUserFollowedByUser()
+                        .enqueue(new Callback<List<Shot>>() {
+                            @Override
+                            public void onResponse(Call<List<Shot>> call, Response<List<Shot>> response) {
+                                assertNotNull(response.body());
+                                signal.countDown();
+                            }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        assertTrue("shotsForUserFollowedByUser is failed", false);
-                        signal.countDown();
-
-                    }
-                });
+                            @Override
+                            public void onFailure(Call<List<Shot>> call, Throwable t) {
+                                assertTrue("shotsForUserFollowedByUser is failed", false);
+                                signal.countDown();
+                            }
+                        });
             }
         });
 
         signal.await();
     }
 
-    public void testFollowUnFollowUser() throws Throwable{
+    public void testFollowUnFollowUser() throws Throwable {
         final CountDownLatch signal = new CountDownLatch(1);
         runTestOnUiThread(new Runnable() {
             @Override
             public void run() {
-
-                authorizedDribbbleService.unfollowUser(TEST_FOLLOWED_USER_ID, new Callback<Void>() {
-                    @Override
-                    public void success(Void aVoid, Response response) {
-
-                        authorizedDribbbleService.followUser(TEST_FOLLOWED_USER_ID, new Callback<Void>() {
-
+                authorizedDribbbleService.unfollowUser(TEST_FOLLOWED_USER_ID)
+                        .enqueue(new Callback<Void>() {
                             @Override
-                            public void success(Void aVoid, Response response) {
-                                signal.countDown();
+                            public void onResponse(Call<Void> call, Response<Void> response) {
+                                authorizedDribbbleService.followUser(TEST_FOLLOWED_USER_ID)
+                                        .enqueue(new Callback<Void>() {
+                                            @Override
+                                            public void onResponse(Call<Void> call, Response<Void> response) {
+                                                signal.countDown();
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<Void> call, Throwable t) {
+                                                assertTrue("followUser is failed", false);
+                                                signal.countDown();
+                                            }
+                                        });
                             }
 
                             @Override
-                            public void failure(RetrofitError error) {
-                                assertTrue("followUser is failed", false);
+                            public void onFailure(Call<Void> call, Throwable t) {
+                                assertTrue("unfollowUser is failed", false);
                                 signal.countDown();
                             }
-
                         });
-
-                        signal.countDown();
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        assertTrue("unfollowUser is failed", false);
-                        signal.countDown();
-                    }
-                });
-
             }
         });
 
@@ -332,19 +342,20 @@ public class DribbbleUsersServiceTest extends InstrumentationTestCase {
         runTestOnUiThread(new Runnable() {
             @Override
             public void run() {
-                dribbbleService.getUsersLikes(TEST_USERS_ID[0], new Callback<List<Like>>() {
-                    @Override
-                    public void success(List<Like> likes, Response response) {
-                        assertNotNull(likes);
-                        signal.countDown();
-                    }
+                dribbbleService.getUsersLikes(TEST_USERS_ID[0])
+                        .enqueue(new Callback<List<Like>>() {
+                            @Override
+                            public void onResponse(Call<List<Like>> call, Response<List<Like>> response) {
+                                assertNotNull(response.body());
+                                signal.countDown();
+                            }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        assertTrue("getUsersLikes is failed", false);
-                        signal.countDown();
-                    }
-                });
+                            @Override
+                            public void onFailure(Call<List<Like>> call, Throwable t) {
+                                assertTrue("getUsersLikes is failed", false);
+                                signal.countDown();
+                            }
+                        });
             }
         });
 
@@ -356,19 +367,20 @@ public class DribbbleUsersServiceTest extends InstrumentationTestCase {
         runTestOnUiThread(new Runnable() {
             @Override
             public void run() {
-                authorizedDribbbleService.getAuthenticatedUsersLikes(new Callback<List<Like>>() {
-                    @Override
-                    public void success(List<Like> likes, Response response) {
-                        assertNotNull(likes);
-                        signal.countDown();
-                    }
+                authorizedDribbbleService.getAuthenticatedUsersLikes()
+                        .enqueue(new Callback<List<Like>>() {
+                            @Override
+                            public void onResponse(Call<List<Like>> call, Response<List<Like>> response) {
+                                assertNotNull(response.body());
+                                signal.countDown();
+                            }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        assertTrue("getAuthenticatedUsersLikes is failed", false);
-                        signal.countDown();
-                    }
-                });
+                            @Override
+                            public void onFailure(Call<List<Like>> call, Throwable t) {
+                                assertTrue("getAuthenticatedUsersLikes is failed", false);
+                                signal.countDown();
+                            }
+                        });
             }
         });
 
@@ -382,19 +394,20 @@ public class DribbbleUsersServiceTest extends InstrumentationTestCase {
         runTestOnUiThread(new Runnable() {
             @Override
             public void run() {
-                dribbbleService.getUsersProjects(TEST_USERS_ID[0], new Callback<List<Project>>() {
-                    @Override
-                    public void success(List<Project> projects, Response response) {
-                        assertNotNull(projects);
-                        signal.countDown();
-                    }
+                dribbbleService.getUsersProjects(TEST_USERS_ID[0])
+                        .enqueue(new Callback<List<Project>>() {
+                            @Override
+                            public void onResponse(Call<List<Project>> call, Response<List<Project>> response) {
+                                assertNotNull(response.body());
+                                signal.countDown();
+                            }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        assertTrue("getUsersProjects is failed", false);
-                        signal.countDown();
-                    }
-                });
+                            @Override
+                            public void onFailure(Call<List<Project>> call, Throwable t) {
+                                assertTrue("getUsersProjects is failed", false);
+                                signal.countDown();
+                            }
+                        });
             }
         });
 
@@ -406,19 +419,20 @@ public class DribbbleUsersServiceTest extends InstrumentationTestCase {
         runTestOnUiThread(new Runnable() {
             @Override
             public void run() {
-                authorizedDribbbleService.getAuthenticatedUsersProjects(new Callback<List<Project>>() {
-                    @Override
-                    public void success(List<Project> projects, Response response) {
-                        assertNotNull(projects);
-                        signal.countDown();
-                    }
+                authorizedDribbbleService.getAuthenticatedUsersProjects()
+                        .enqueue(new Callback<List<Project>>() {
+                            @Override
+                            public void onResponse(Call<List<Project>> call, Response<List<Project>> response) {
+                                assertNotNull(response.body());
+                                signal.countDown();
+                            }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        assertTrue("getAuthenticatedUsersProjects is failed", false);
-                        signal.countDown();
-                    }
-                });
+                            @Override
+                            public void onFailure(Call<List<Project>> call, Throwable t) {
+                                assertTrue("getAuthenticatedUsersProjects is failed", false);
+                                signal.countDown();
+                            }
+                        });
             }
         });
 
@@ -432,19 +446,20 @@ public class DribbbleUsersServiceTest extends InstrumentationTestCase {
         runTestOnUiThread(new Runnable() {
             @Override
             public void run() {
-                dribbbleService.getUsersShots(TEST_USERS_ID[0], new Callback<List<Shot>>() {
-                    @Override
-                    public void success(List<Shot> shots, Response response) {
-                        assertNotNull(shots);
-                        signal.countDown();
-                    }
+                dribbbleService.getUsersShots(TEST_USERS_ID[0])
+                        .enqueue(new Callback<List<Shot>>() {
+                            @Override
+                            public void onResponse(Call<List<Shot>> call, Response<List<Shot>> response) {
+                                assertNotNull(response.body());
+                                signal.countDown();
+                            }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        assertTrue("getUsersShots is failed", false);
-                        signal.countDown();
-                    }
-                });
+                            @Override
+                            public void onFailure(Call<List<Shot>> call, Throwable t) {
+                                assertTrue("getUsersShots is failed", false);
+                                signal.countDown();
+                            }
+                        });
             }
         });
 
@@ -456,19 +471,20 @@ public class DribbbleUsersServiceTest extends InstrumentationTestCase {
         runTestOnUiThread(new Runnable() {
             @Override
             public void run() {
-                authorizedDribbbleService.getAuthenticatedUsersShots(1, new Callback<List<Shot>>() {
-                    @Override
-                    public void success(List<Shot> shots, Response response) {
-                        assertNotNull(shots);
-                        signal.countDown();
-                    }
+                authorizedDribbbleService.getAuthenticatedUsersShots(1, 1)
+                        .enqueue(new Callback<List<Shot>>() {
+                            @Override
+                            public void onResponse(Call<List<Shot>> call, Response<List<Shot>> response) {
+                                assertNotNull(response.body());
+                                signal.countDown();
+                            }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        assertTrue("getAuthenticatedUsersShots is failed", false);
-                        signal.countDown();
-                    }
-                });
+                            @Override
+                            public void onFailure(Call<List<Shot>> call, Throwable t) {
+                                assertTrue("getAuthenticatedUsersShots is failed", false);
+                                signal.countDown();
+                            }
+                        });
             }
         });
 
@@ -482,19 +498,20 @@ public class DribbbleUsersServiceTest extends InstrumentationTestCase {
         runTestOnUiThread(new Runnable() {
             @Override
             public void run() {
-                dribbbleService.getUsersTeams(TEST_USERS_ID[0], new Callback<List<Team>>() {
-                    @Override
-                    public void success(List<Team> teams, Response response) {
-                        assertNotNull(teams);
-                        signal.countDown();
-                    }
+                dribbbleService.getUsersTeams(TEST_USERS_ID[0])
+                        .enqueue(new Callback<List<Team>>() {
+                            @Override
+                            public void onResponse(Call<List<Team>> call, Response<List<Team>> response) {
+                                assertNotNull(response.body());
+                                signal.countDown();
+                            }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        assertTrue("getUsersTeams is failed", false);
-                        signal.countDown();
-                    }
-                });
+                            @Override
+                            public void onFailure(Call<List<Team>> call, Throwable t) {
+                                assertTrue("getUsersTeams is failed", false);
+                                signal.countDown();
+                            }
+                        });
             }
         });
 
@@ -506,19 +523,20 @@ public class DribbbleUsersServiceTest extends InstrumentationTestCase {
         runTestOnUiThread(new Runnable() {
             @Override
             public void run() {
-                authorizedDribbbleService.getAuthenticatedUsersTeams(1, new Callback<List<Team>>() {
-                    @Override
-                    public void success(List<Team> teams, Response response) {
-                        assertNotNull(teams);
-                        signal.countDown();
-                    }
+                authorizedDribbbleService.getAuthenticatedUsersTeams(1)
+                        .enqueue(new Callback<List<Team>>() {
+                            @Override
+                            public void onResponse(Call<List<Team>> call, Response<List<Team>> response) {
+                                assertNotNull(response.body());
+                                signal.countDown();
+                            }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        assertTrue("getAuthenticatedUsersTeams is failed", false);
-                        signal.countDown();
-                    }
-                });
+                            @Override
+                            public void onFailure(Call<List<Team>> call, Throwable t) {
+                                assertTrue("getAuthenticatedUsersTeams is failed", false);
+                                signal.countDown();
+                            }
+                        });
             }
         });
 

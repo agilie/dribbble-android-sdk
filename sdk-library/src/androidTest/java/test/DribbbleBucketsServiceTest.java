@@ -4,15 +4,18 @@ import android.test.InstrumentationTestCase;
 
 import com.agilie.dribbblesdk.domain.Bucket;
 import com.agilie.dribbblesdk.domain.Shot;
-import com.agilie.dribbblesdk.service.retrofit.DribbbleServiceGenerator;
+import com.agilie.dribbblesdk.service.retrofit.DribbbleWebServiceHelper;
 import com.agilie.dribbblesdk.service.retrofit.services.DribbbleBucketsService;
 
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import okhttp3.OkHttpClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
 
 public class DribbbleBucketsServiceTest extends InstrumentationTestCase {
 
@@ -27,27 +30,30 @@ public class DribbbleBucketsServiceTest extends InstrumentationTestCase {
     private DribbbleBucketsService dribbbleService;
 
     public DribbbleBucketsServiceTest() {
-        authorizedDribbbleService = DribbbleServiceGenerator.getDribbbleBucketService(AUTH_TOKEN_FOR_TEST);
-        dribbbleService = DribbbleServiceGenerator.getDribbbleBucketService(AUTH_TOKEN_FOR_TEST);
+        OkHttpClient.Builder okHttpClientBuilder = DribbbleWebServiceHelper.getOkHttpClientBuilder(AUTH_TOKEN_FOR_TEST);
+        Retrofit retrofit = DribbbleWebServiceHelper.getRetrofitBuilder(okHttpClientBuilder).build();
+        authorizedDribbbleService = DribbbleWebServiceHelper.getDribbbleBucketService(retrofit);
+        dribbbleService = DribbbleWebServiceHelper.getDribbbleBucketService(retrofit);
     }
 
     public void testGetBucket() throws Throwable {
         final CountDownLatch signal = new CountDownLatch(1);
         runTestOnUiThread(new Runnable() {
             public void run() {
-                dribbbleService.getBucket(TEST_BUCKET_ID, new Callback<Bucket>() {
-                    @Override
-                    public void success(final Bucket bucket, Response response) {
-                        assertNotNull(bucket);
-                        signal.countDown();
-                    }
+                dribbbleService.getBucket(TEST_BUCKET_ID)
+                        .enqueue(new Callback<Bucket>() {
+                            @Override
+                            public void onResponse(Call<Bucket> call, Response<Bucket> response) {
+                                assertNotNull(response.body());
+                                signal.countDown();
+                            }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        assertTrue("testGetBucket is failed", false);
-                        signal.countDown();
-                    }
-                });
+                            @Override
+                            public void onFailure(Call<Bucket> call, Throwable t) {
+                                assertTrue("testGetBucket is failed", false);
+                                signal.countDown();
+                            }
+                        });
             }
         });
 
@@ -61,31 +67,31 @@ public class DribbbleBucketsServiceTest extends InstrumentationTestCase {
                 Bucket bucket = new Bucket();
                 bucket.setName("BucketName");
                 bucket.setDescription("Description for this bucket");
-                authorizedDribbbleService.createBucket(bucket, new Callback<Bucket>() {
-                    @Override
-                    public void success(final Bucket bucket, Response response) {
-                        assertNotNull(bucket);
-                        authorizedDribbbleService.deleteBucket(bucket.getId(), new Callback<Void>() {
+                authorizedDribbbleService.createBucket(bucket)
+                        .enqueue(new Callback<Bucket>() {
                             @Override
-                            public void success(Void aVoid, Response response) {
-                                signal.countDown();
+                            public void onResponse(Call<Bucket> call, Response<Bucket> response) {
+                                assertNotNull(response.body());
+                                authorizedDribbbleService.deleteBucket(response.body().getId()).enqueue(new Callback<Void>() {
+                                    @Override
+                                    public void onResponse(Call<Void> call, Response<Void> response) {
+                                        signal.countDown();
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<Void> call, Throwable t) {
+                                        assertTrue("testDeleteBucket is failed", false);
+                                        signal.countDown();
+                                    }
+                                });
                             }
 
                             @Override
-                            public void failure(RetrofitError error) {
-                                assertTrue("testDeleteBucket is failed", false);
+                            public void onFailure(Call<Bucket> call, Throwable t) {
+                                assertTrue("testCreateBucket is failed", false);
                                 signal.countDown();
                             }
                         });
-
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        assertTrue("testCreateBucket is failed", false);
-                        signal.countDown();
-                    }
-                });
             }
         });
 
@@ -99,44 +105,49 @@ public class DribbbleBucketsServiceTest extends InstrumentationTestCase {
                 Bucket bucket = new Bucket();
                 bucket.setName("BucketName");
                 bucket.setDescription("Description for this bucket");
-                authorizedDribbbleService.createBucket(bucket, new Callback<Bucket>() {
-                    @Override
-                    public void success(final Bucket bucket, Response response) {
-                        assertNotNull(bucket);
-                        bucket.setName("New BucketName");
-                        authorizedDribbbleService.updateBucket(bucket.getId(), bucket, new Callback<Bucket>() {
+                authorizedDribbbleService.createBucket(bucket)
+                        .enqueue(new Callback<Bucket>() {
                             @Override
-                            public void success(Bucket bucket, Response response) {
+                            public void onResponse(Call<Bucket> call, Response<Bucket> response) {
+                                Bucket bucket = response.body();
                                 assertNotNull(bucket);
-                                authorizedDribbbleService.deleteBucket(bucket.getId(), new Callback<Void>() {
-                                    @Override
-                                    public void success(Void aVoid, Response response) {
-                                        signal.countDown();
-                                    }
+                                bucket.setName("New BucketName");
+                                authorizedDribbbleService.updateBucket(bucket.getId(), bucket)
+                                        .enqueue(new Callback<Bucket>() {
+                                            @Override
+                                            public void onResponse(Call<Bucket> call, Response<Bucket> response) {
+                                                Bucket bucket = response.body();
+                                                assertNotNull(bucket);
+                                                authorizedDribbbleService.deleteBucket(bucket.getId())
+                                                        .enqueue(new Callback<Void>() {
 
-                                    @Override
-                                    public void failure(RetrofitError error) {
-                                        assertTrue("testDeleteBucket is failed", false);
-                                        signal.countDown();
-                                    }
-                                });
+                                                            @Override
+                                                            public void onResponse(Call<Void> call, Response<Void> response) {
+                                                                signal.countDown();
+                                                            }
+
+                                                            @Override
+                                                            public void onFailure(Call<Void> call, Throwable t) {
+                                                                assertTrue("testDeleteBucket is failed", false);
+                                                                signal.countDown();
+                                                            }
+                                                        });
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<Bucket> call, Throwable t) {
+                                                assertTrue("testUpdateBucket is failed", false);
+                                                signal.countDown();
+                                            }
+                                        });
                             }
 
                             @Override
-                            public void failure(RetrofitError error) {
-                                assertTrue("testUpdateBucket is failed", false);
+                            public void onFailure(Call<Bucket> call, Throwable t) {
+                                assertTrue("testCreateBucket is failed", false);
                                 signal.countDown();
                             }
                         });
-
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        assertTrue("testCreateBucket is failed", false);
-                        signal.countDown();
-                    }
-                });
             }
         });
 
@@ -148,57 +159,61 @@ public class DribbbleBucketsServiceTest extends InstrumentationTestCase {
         final CountDownLatch signal = new CountDownLatch(1);
         runTestOnUiThread(new Runnable() {
             public void run() {
-                dribbbleService.getShotsForBucket(TEST_BUCKET_ID, new Callback<List<Shot>>() {
-                    @Override
-                    public void success(final List<Shot> shots, Response response) {
-                        assertNotNull(shots);
-                        signal.countDown();
-                    }
+                dribbbleService.getShotsForBucket(TEST_BUCKET_ID)
+                        .enqueue(new Callback<List<Shot>>() {
+                                     @Override
+                                     public void onResponse(Call<List<Shot>> call, Response<List<Shot>> response) {
+                                         assertNotNull(response.body());
+                                         signal.countDown();
+                                     }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        assertTrue("testGetShotsForBucket is failed", false);
-                        signal.countDown();
-                    }
-                });
+                                     @Override
+                                     public void onFailure(Call<List<Shot>> call, Throwable t) {
+                                         assertTrue("testGetShotsForBucket is failed", false);
+                                         signal.countDown();
+                                     }
+                                 }
+                        );
             }
         });
 
         signal.await();
     }
 
-    public void testAddRemoveBucketShot() throws  Throwable {
+    public void testAddRemoveBucketShot() throws Throwable {
         final CountDownLatch signal = new CountDownLatch(1);
         runTestOnUiThread(new Runnable() {
             public void run() {
                 final Shot shot = new Shot();
                 shot.setId(TEST_SHOT_ID);
-                authorizedDribbbleService.addShotToBucket(TEST_AUTHORIZED_USER_BUCKET_ID, TEST_SHOT_TO_ADD_REMOVE_FROM_BUCKET, new Callback<Void>() {
-                    @Override
-                    public void success(final Void aVoid, Response response) {
-                        authorizedDribbbleService.removeShotFromBucket(TEST_AUTHORIZED_USER_BUCKET_ID, TEST_SHOT_TO_ADD_REMOVE_FROM_BUCKET, new Callback<Void>() {
-                            @Override
-                            public void success(Void aVoid, Response response) {
-                                signal.countDown();
-                            }
+                authorizedDribbbleService.addShotToBucket(TEST_AUTHORIZED_USER_BUCKET_ID, TEST_SHOT_TO_ADD_REMOVE_FROM_BUCKET)
+                        .enqueue(new Callback<Void>() {
+                                     @Override
+                                     public void onResponse(Call<Void> call, Response<Void> response) {
+                                         authorizedDribbbleService.removeShotFromBucket(TEST_AUTHORIZED_USER_BUCKET_ID, TEST_SHOT_TO_ADD_REMOVE_FROM_BUCKET).enqueue(
+                                                 new Callback<Void>() {
+                                                     @Override
+                                                     public void onResponse(Call<Void> call, Response<Void> response) {
+                                                         signal.countDown();
+                                                     }
 
-                            @Override
-                            public void failure(RetrofitError error) {
-                                assertTrue("testRemoveShotFromBucket is failed", false);
-                                signal.countDown();
-                            }
-                        });
-                    }
+                                                     @Override
+                                                     public void onFailure(Call<Void> call, Throwable t) {
+                                                         assertTrue("testRemoveShotFromBucket is failed", false);
+                                                         signal.countDown();
+                                                     }
+                                                 }
+                                         );
+                                     }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        assertTrue("testAddAhotToBucket is failed", false);
-                        signal.countDown();
-                    }
-                });
+                                     @Override
+                                     public void onFailure(Call<Void> call, Throwable t) {
+
+                                     }
+                                 }
+                        );
             }
         });
-
         signal.await();
     }
 

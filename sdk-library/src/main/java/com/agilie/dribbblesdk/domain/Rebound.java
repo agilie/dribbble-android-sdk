@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by tatyanasoldatkina on 3/26/15.
@@ -75,7 +76,7 @@ public class Rebound implements Serializable {
     private String reboundSourceUrl;
 
     @SerializedName("tags")
-    private Array tags;
+    private List<String> tags;
 
     @SerializedName("user")
     private User user;
@@ -251,11 +252,11 @@ public class Rebound implements Serializable {
         this.reboundSourceUrl = reboundSourceUrl;
     }
 
-    public Array getTags() {
+    public List<String> getTags() {
         return tags;
     }
 
-    public void setTags(Array tags) {
+    public void setTags(List<String> tags) {
         this.tags = tags;
     }
 

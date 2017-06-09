@@ -2,6 +2,7 @@ package test;
 
 import android.os.Environment;
 import android.test.InstrumentationTestCase;
+import android.util.Log;
 
 import com.agilie.dribbblesdk.domain.Attachment;
 import com.agilie.dribbblesdk.domain.Bucket;
@@ -10,7 +11,7 @@ import com.agilie.dribbblesdk.domain.Like;
 import com.agilie.dribbblesdk.domain.Project;
 import com.agilie.dribbblesdk.domain.Rebound;
 import com.agilie.dribbblesdk.domain.Shot;
-import com.agilie.dribbblesdk.service.retrofit.DribbbleServiceGenerator;
+import com.agilie.dribbblesdk.service.retrofit.DribbbleWebServiceHelper;
 import com.agilie.dribbblesdk.service.retrofit.services.DribbbleShotsService;
 import com.agilie.dribbblesdk.service.retrofit.services.DribbbleUserService;
 
@@ -22,18 +23,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Header;
-import retrofit.client.Response;
-import retrofit.mime.TypedFile;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class DribbbleShotsServiceTest extends InstrumentationTestCase {
 
     protected static final String AUTH_TOKEN_FOR_TEST = "3f4b08a584a0b7cb770990ca5d83050a9761d48d0611dbfc4b944ecf1cbac7a2";
     // token with all scopes "3f4b08a584a0b7cb770990ca5d83050a9761d48d0611dbfc4b944ecf1cbac7a2"
     // 3f4b08a584a0b7cb770990ca5d83050a9761d48d0611dbfc4b944ecf1cbac7a2
-    protected static final long TEST_SHOT_ID = 1997749;
+    protected static final long TEST_SHOT_ID = 472178;
     protected static final long TEST_SHOT_WITH_ATTACHMENT_ID = 1999342;
     protected static final long TEST_ATTACHMENT_ID = 351491; // for shot 1999342
 
@@ -46,78 +50,85 @@ public class DribbbleShotsServiceTest extends InstrumentationTestCase {
     protected SimpleDateFormat simpleDateFormat;
 
     public DribbbleShotsServiceTest() {
-        authorizedDribbbleService = DribbbleServiceGenerator.getDribbbleShotService(AUTH_TOKEN_FOR_TEST);
-        dribbbleService = DribbbleServiceGenerator.getDribbbleShotService(AUTH_TOKEN_FOR_TEST);
-        dribbbleUserService = DribbbleServiceGenerator.getDribbbleUserService(AUTH_TOKEN_FOR_TEST);
+        OkHttpClient.Builder okHttpClientBuilder = DribbbleWebServiceHelper.getOkHttpClientBuilder(AUTH_TOKEN_FOR_TEST);
+        Retrofit retrofit = DribbbleWebServiceHelper.getRetrofitBuilder(okHttpClientBuilder).build();
+
+        authorizedDribbbleService = DribbbleWebServiceHelper.getDribbbleShotService(retrofit);
+        dribbbleService = DribbbleWebServiceHelper.getDribbbleShotService(retrofit);
+        dribbbleUserService = DribbbleWebServiceHelper.getDribbbleUserService(retrofit);
+
         simpleDateFormat = new SimpleDateFormat(DATE_PATTERN);
     }
 
-    public void testFetchShotsPage() throws Throwable{
+    public void testFetchShotsPage() throws Throwable {
         final CountDownLatch signal = new CountDownLatch(1);
         runTestOnUiThread(new Runnable() {
             @Override
             public void run() {
-                dribbbleService.fetchShots(1, new Callback<List<Shot>>() {
-                    @Override
-                    public void success(List<Shot> shots, Response response) {
-                        assertNotNull(shots);
-                        signal.countDown();
-                    }
+                dribbbleService.fetchShots(1)
+                        .enqueue(new Callback<List<Shot>>() {
+                            @Override
+                            public void onResponse(Call<List<Shot>> call, Response<List<Shot>> response) {
+                                assertNotNull(response.body());
+                                signal.countDown();
+                            }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        assertTrue("fetchShots with page is failed", false);
-                        signal.countDown();
-                    }
-                });
+                            @Override
+                            public void onFailure(Call<List<Shot>> call, Throwable t) {
+                                assertTrue("fetchShots with page is failed", false);
+                                signal.countDown();
+                            }
+                        });
             }
         });
 
         signal.await();
     }
 
-    public void testFetchShotsPerPage() throws Throwable{
+    public void testFetchShotsPerPage() throws Throwable {
         final CountDownLatch signal = new CountDownLatch(1);
         runTestOnUiThread(new Runnable() {
             @Override
             public void run() {
-                dribbbleService.fetchShots(1, 5, new Callback<List<Shot>>() {
-                    @Override
-                    public void success(List<Shot> shots, Response response) {
-                        assertNotNull(shots);
-                        signal.countDown();
-                    }
+                dribbbleService.fetchShots(1, 5)
+                        .enqueue(new Callback<List<Shot>>() {
+                            @Override
+                            public void onResponse(Call<List<Shot>> call, Response<List<Shot>> response) {
+                                assertNotNull(response.body());
+                                signal.countDown();
+                            }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        assertTrue("fetchShots with page, per_page is failed", false);
-                        signal.countDown();
-                    }
-                });
+                            @Override
+                            public void onFailure(Call<List<Shot>> call, Throwable t) {
+                                assertTrue("fetchShots with page, per_page is failed", false);
+                                signal.countDown();
+                            }
+                        });
             }
         });
 
         signal.await();
     }
 
-    public void testFetchShotsListSort() throws Throwable{
+    public void testFetchShotsListSort() throws Throwable {
         final CountDownLatch signal = new CountDownLatch(1);
         runTestOnUiThread(new Runnable() {
             @Override
             public void run() {
-                dribbbleService.fetchShots(1, 5, Shot.LIST_ANIMATED, Shot.SORT_VIEWS, new Callback<List<Shot>>() {
-                    @Override
-                    public void success(List<Shot> shots, Response response) {
-                        assertNotNull(shots);
-                        signal.countDown();
-                    }
+                dribbbleService.fetchShots(1, 5, Shot.LIST_ANIMATED, Shot.SORT_VIEWS)
+                        .enqueue(new Callback<List<Shot>>() {
+                            @Override
+                            public void onResponse(Call<List<Shot>> call, Response<List<Shot>> response) {
+                                assertNotNull(response.body());
+                                signal.countDown();
+                            }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        assertTrue("fetchShots with page, per_page, list, sort is failed", false);
-                        signal.countDown();
-                    }
-                });
+                            @Override
+                            public void onFailure(Call<List<Shot>> call, Throwable t) {
+                                assertTrue("fetchShots with page, per_page, list, sort is failed", false);
+                                signal.countDown();
+                            }
+                        });
             }
         });
 
@@ -130,16 +141,16 @@ public class DribbbleShotsServiceTest extends InstrumentationTestCase {
             @Override
             public void run() {
                 dribbbleService.fetchShots(1, 5, Shot.LIST_ANIMATED, Shot.SORT_VIEWS,
-                        (simpleDateFormat.format(new Date())), Shot.TIMEFRAME_MONTH,
-                        new Callback<List<Shot>>() {
+                        (simpleDateFormat.format(new Date())), Shot.TIMEFRAME_MONTH)
+                        .enqueue(new Callback<List<Shot>>() {
                             @Override
-                            public void success(List<Shot> shots, Response response) {
-                                assertNotNull(shots);
+                            public void onResponse(Call<List<Shot>> call, Response<List<Shot>> response) {
+                                assertNotNull(response.body());
                                 signal.countDown();
                             }
 
                             @Override
-                            public void failure(RetrofitError error) {
+                            public void onFailure(Call<List<Shot>> call, Throwable t) {
                                 assertTrue("fetchShots with all parameters is failed", false);
                                 signal.countDown();
                             }
@@ -151,23 +162,22 @@ public class DribbbleShotsServiceTest extends InstrumentationTestCase {
     }
 
 
-
-    public void testFetchShotsWithAllParametersWithOutPerPage() throws Throwable{
+    public void testFetchShotsWithAllParametersWithOutPerPage() throws Throwable {
         final CountDownLatch signal = new CountDownLatch(1);
         runTestOnUiThread(new Runnable() {
             @Override
             public void run() {
                 dribbbleService.fetchShots(1, Shot.LIST_ANIMATED, Shot.SORT_VIEWS,
-                        (simpleDateFormat.format(new Date())), Shot.TIMEFRAME_YEAR,
-                        new Callback<List<Shot>>() {
+                        (simpleDateFormat.format(new Date())), Shot.TIMEFRAME_YEAR)
+                        .enqueue(new Callback<List<Shot>>() {
                             @Override
-                            public void success(List<Shot> shots, Response response) {
-                                assertNotNull(shots);
+                            public void onResponse(Call<List<Shot>> call, Response<List<Shot>> response) {
+                                assertNotNull(response.body());
                                 signal.countDown();
                             }
 
                             @Override
-                            public void failure(RetrofitError error) {
+                            public void onFailure(Call<List<Shot>> call, Throwable t) {
                                 assertTrue("fetchShots with page, list, sort, date, timeframe is failed", false);
                                 signal.countDown();
                             }
@@ -178,21 +188,21 @@ public class DribbbleShotsServiceTest extends InstrumentationTestCase {
         signal.await();
     }
 
-    public void testFetchShotsOnlyList() throws Throwable{
+    public void testFetchShotsOnlyList() throws Throwable {
         final CountDownLatch signal = new CountDownLatch(1);
         runTestOnUiThread(new Runnable() {
             @Override
             public void run() {
-                dribbbleService.fetchShots(Shot.LIST_ANIMATED,
-                        new Callback<List<Shot>>() {
+                dribbbleService.fetchShots(Shot.LIST_ANIMATED)
+                        .enqueue(new Callback<List<Shot>>() {
                             @Override
-                            public void success(List<Shot> shots, Response response) {
-                                assertNotNull(shots);
+                            public void onResponse(Call<List<Shot>> call, Response<List<Shot>> response) {
+                                assertNotNull(response.body());
                                 signal.countDown();
                             }
 
                             @Override
-                            public void failure(RetrofitError error) {
+                            public void onFailure(Call<List<Shot>> call, Throwable t) {
                                 assertTrue("fetchShots with list is failed", false);
                                 signal.countDown();
                             }
@@ -203,7 +213,7 @@ public class DribbbleShotsServiceTest extends InstrumentationTestCase {
         signal.await();
     }
 
-    public void testFetchShotsQueryMap() throws Throwable{
+    public void testFetchShotsQueryMap() throws Throwable {
         final CountDownLatch signal = new CountDownLatch(1);
         runTestOnUiThread(new Runnable() {
             @Override
@@ -212,40 +222,41 @@ public class DribbbleShotsServiceTest extends InstrumentationTestCase {
                 queryMap.put("list", Shot.LIST_ANIMATED);
                 queryMap.put("sort", Shot.SORT_VIEWS);
                 queryMap.put("per_string", 5);
-                dribbbleService.fetchShots(queryMap, new Callback<List<Shot>>() {
-                    @Override
-                    public void success(List<Shot> shots, Response response) {
-                        assertNotNull(shots);
-                        signal.countDown();
-                    }
+                dribbbleService.fetchShots(queryMap)
+                        .enqueue(new Callback<List<Shot>>() {
+                            @Override
+                            public void onResponse(Call<List<Shot>> call, Response<List<Shot>> response) {
+                                assertNotNull(response.body());
+                                signal.countDown();
+                            }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        assertTrue("fetchShots with QueryMap is failed", false);
-                        signal.countDown();
-                    }
-                });
+                            @Override
+                            public void onFailure(Call<List<Shot>> call, Throwable t) {
+                                assertTrue("fetchShots with QueryMap is failed", false);
+                                signal.countDown();
+                            }
+                        });
             }
         });
 
         signal.await();
     }
 
-    public void testFetchSortedShots() throws Throwable{
+    public void testFetchSortedShots() throws Throwable {
         final CountDownLatch signal = new CountDownLatch(1);
         runTestOnUiThread(new Runnable() {
             @Override
             public void run() {
-                dribbbleService.fetchSortedShots(Shot.SORT_VIEWS,
-                        new Callback<List<Shot>>() {
+                dribbbleService.fetchSortedShots(Shot.SORT_VIEWS)
+                        .enqueue(new Callback<List<Shot>>() {
                             @Override
-                            public void success(List<Shot> shots, Response response) {
-                                assertNotNull(shots);
+                            public void onResponse(Call<List<Shot>> call, Response<List<Shot>> response) {
+                                assertNotNull(response.body());
                                 signal.countDown();
                             }
 
                             @Override
-                            public void failure(RetrofitError error) {
+                            public void onFailure(Call<List<Shot>> call, Throwable t) {
                                 assertTrue("fetchSortedShots is failed", false);
                                 signal.countDown();
                             }
@@ -260,19 +271,20 @@ public class DribbbleShotsServiceTest extends InstrumentationTestCase {
         final CountDownLatch signal = new CountDownLatch(1);
         runTestOnUiThread(new Runnable() {
             public void run() {
-                dribbbleService.getShot(TEST_SHOT_ID, new Callback<Shot>() {
-                    @Override
-                    public void success(Shot shot, Response response) {
-                        assertNotNull(shot);
-                        signal.countDown();
-                    }
+                dribbbleService.getShot(TEST_SHOT_ID)
+                        .enqueue(new Callback<Shot>() {
+                            @Override
+                            public void onResponse(Call<Shot> call, Response<Shot> response) {
+                                assertNotNull(response.body());
+                                signal.countDown();
+                            }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        assertTrue("testGetShot is failed", false);
-                        signal.countDown();
-                    }
-                });
+                            @Override
+                            public void onFailure(Call<Shot> call, Throwable t) {
+                                assertTrue("testGetShot is failed", false);
+                                signal.countDown();
+                            }
+                        });
             }
         });
 
@@ -285,7 +297,6 @@ public class DribbbleShotsServiceTest extends InstrumentationTestCase {
         runTestOnUiThread(new Runnable() {
             public void run() {
 
-
                 final String[] tags = new String[]{"tag 1", "tag 2"};
                 Shot shot = new Shot();
                 shot.setTitle("ShotTitle");
@@ -293,89 +304,100 @@ public class DribbbleShotsServiceTest extends InstrumentationTestCase {
                 shot.setTags(tags);
 
                 //TODO: Remove path of file
-                File file = new File(Environment.getExternalStorageDirectory().getPath() + "/Download/ball.jpg");
+                File file = new File(Environment.getExternalStorageDirectory().getPath() + "/Download", "ball.jpg");
 
                 if (!file.exists()) {
                     assertTrue("File not exists!", false);
                 }
 
-                TypedFile typedFile = new TypedFile("image/jpeg", file);
+                RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), file);
+                MultipartBody.Part part = MultipartBody.Part.createFormData("image", file.getName(), requestBody);
 
-                authorizedDribbbleService.createShot(shot.getTitle(), typedFile, new Callback<Void>() {
 
-                    @Override
-                    public void success(Void aVoid, Response response) {
-
-                        List<Header> headerList =  response.getHeaders();
-                        boolean isGetShotId = false;
-                        long shotId = 0;
-                        for (Header header: headerList) {
-
-                            String headerName = header.getName();
-
-                            if (headerName != null) {
-
-                                if (headerName.equals("Location")) {
-
-                                    // The way to get shot ID from list of headers of response
-
-                                    String headerValue = header.getValue();
-                                    int lastIndexOfLine = headerValue.lastIndexOf("/");
-                                    int fistIndexOfMinus = headerValue.lastIndexOf("-");
-                                    String stringShotId = headerValue.substring(lastIndexOfLine + 1, fistIndexOfMinus);
-                                    shotId = Long.parseLong(stringShotId);
-                                    isGetShotId = true;
+                authorizedDribbbleService.createShot(shot.getTitle(), part)
+                        .enqueue(new Callback<Void>() {
+                            @Override
+                            public void onResponse(Call<Void> call, Response<Void> response) {
+                                Map<String, List<String>> headerList = response.headers().toMultimap();
+                                boolean isGetShotId = false;
+                                long shotId = 0;
+                                if (headerList.containsKey("Location")) {
+                                    List<String> headerValues = headerList.get("Location");
+                                    for (String headerValue : headerValues) {
+                                        int lastIndexOfLine = headerValue.lastIndexOf("/");
+                                        int fistIndexOfMinus = headerValue.lastIndexOf("-");
+                                        String stringShotId = headerValue.substring(lastIndexOfLine + 1, fistIndexOfMinus - 1);
+                                        shotId = Long.parseLong(stringShotId);
+                                        isGetShotId = true;
+                                    }
                                 }
 
+
+//                                for (Header header : headerList) {
+//
+//                                    String headerName = header.getName();
+//
+//                                    if (headerName != null) {
+//
+//                                        if (headerName.equals("Location")) {
+//
+//                                            // The way to get shot ID from list of headers of response
+//
+//                                            String headerValue = header.getValue();
+//                                            int lastIndexOfLine = headerValue.lastIndexOf("/");
+//                                            int fistIndexOfMinus = headerValue.lastIndexOf("-");
+//                                            String stringShotId = headerValue.substring(lastIndexOfLine + 1, fistIndexOfMinus);
+//                                            shotId = Long.parseLong(stringShotId);
+//                                            isGetShotId = true;
+//                                        }
+//
+//                                    }
+//
+//                                }
+
+                                if (!isGetShotId) {
+                                    assertTrue("Error get id from header", false);
+                                }
+                                Shot shot = new Shot();
+                                shot.setId(shotId);
+                                shot.setDescription("New Shot Description");
+
+                                authorizedDribbbleService.updateShot(shot.getId(), shot.getDescription())
+                                        .enqueue(new Callback<Shot>() {
+                                            @Override
+                                            public void onResponse(Call<Shot> call, Response<Shot> response) {
+                                                assertNotNull(response.body());
+//
+                                                authorizedDribbbleService.deleteShot(response.body().getId())
+                                                        .enqueue(new Callback<Void>() {
+                                                            @Override
+                                                            public void onResponse(Call<Void> call, Response<Void> response) {
+                                                                signal.countDown();
+
+                                                            }
+
+                                                            @Override
+                                                            public void onFailure(Call<Void> call, Throwable t) {
+                                                                assertTrue("testDeleteShot is failed", false);
+                                                                signal.countDown();
+                                                            }
+                                                        });
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<Shot> call, Throwable t) {
+                                                assertTrue("testUpdateShot is failed", false);
+                                                signal.countDown();
+                                            }
+                                        });
                             }
 
-                        }
-                        if (!isGetShotId) {
-                            assertTrue("Error get id from header", false);
-                        }
-                        Shot shot = new Shot();
-                        shot.setId(shotId);
-                        shot.setDescription("New Shot Description");
-
-                        authorizedDribbbleService.updateShot(shot.getId(), shot.getDescription(), new Callback<Shot>() {
-
                             @Override
-                            public void success(Shot shot, Response response) {
-
-                                assertNotNull(shot);
-
-                                authorizedDribbbleService.deleteShot(shot.getId(), new Callback<Void>() {
-
-                                    @Override
-                                    public void success(Void aVoid, Response response) {
-                                        signal.countDown();
-                                    }
-
-                                    @Override
-                                    public void failure(RetrofitError error) {
-                                        assertTrue("testDeleteShot is failed", false);
-                                        signal.countDown();
-                                    }
-                                });
-
-                            }
-
-                            @Override
-                            public void failure(RetrofitError error) {
-                                assertTrue("testUpdateShot is failed", false);
+                            public void onFailure(Call<Void> call, Throwable t) {
+                                assertTrue("testCreateShot is failed", false);
                                 signal.countDown();
                             }
                         });
-
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        assertTrue("testCreateShot is failed", false);
-                        signal.countDown();
-                    }
-
-                });
             }
         });
 
@@ -389,19 +411,20 @@ public class DribbbleShotsServiceTest extends InstrumentationTestCase {
         runTestOnUiThread(new Runnable() {
             @Override
             public void run() {
-                dribbbleService.getShotAttachments(TEST_SHOT_WITH_ATTACHMENT_ID, new Callback<List<Attachment>>() {
-                    @Override
-                    public void success(List<Attachment> attachments, Response response) {
-                        assertNotNull(attachments);
-                        signal.countDown();
-                    }
+                dribbbleService.getShotAttachments(TEST_SHOT_WITH_ATTACHMENT_ID)
+                        .enqueue(new Callback<List<Attachment>>() {
+                            @Override
+                            public void onResponse(Call<List<Attachment>> call, Response<List<Attachment>> response) {
+                                assertNotNull(response.body());
+                                signal.countDown();
+                            }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        assertTrue("testGetShotAttachments is failed", false);
-                        signal.countDown();
-                    }
-                });
+                            @Override
+                            public void onFailure(Call<List<Attachment>> call, Throwable t) {
+                                assertTrue("testGetShotAttachments is failed", false);
+                                signal.countDown();
+                            }
+                        });
             }
         });
 
@@ -413,19 +436,20 @@ public class DribbbleShotsServiceTest extends InstrumentationTestCase {
         runTestOnUiThread(new Runnable() {
             @Override
             public void run() {
-                dribbbleService.getShotAttachment(TEST_SHOT_WITH_ATTACHMENT_ID, TEST_ATTACHMENT_ID, new Callback<Attachment>() {
-                    @Override
-                    public void success(Attachment attachment, Response response) {
-                        assertNotNull(attachment);
-                        signal.countDown();
-                    }
+                dribbbleService.getShotAttachment(TEST_SHOT_WITH_ATTACHMENT_ID, TEST_ATTACHMENT_ID)
+                        .enqueue(new Callback<Attachment>() {
+                            @Override
+                            public void onResponse(Call<Attachment> call, Response<Attachment> response) {
+                                assertNotNull(response.body());
+                                signal.countDown();
+                            }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        assertTrue("testGetShotAttachment is failed", false);
-                        signal.countDown();
-                    }
-                });
+                            @Override
+                            public void onFailure(Call<Attachment> call, Throwable t) {
+                                assertTrue("testGetShotAttachment is failed", false);
+                                signal.countDown();
+                            }
+                        });
             }
         });
 
@@ -440,19 +464,20 @@ public class DribbbleShotsServiceTest extends InstrumentationTestCase {
         runTestOnUiThread(new Runnable() {
             @Override
             public void run() {
-                dribbbleService.getShotBuckets(TEST_SHOT_ID, new Callback<List<Bucket>>() {
-                    @Override
-                    public void success(List<Bucket> buckets, Response response) {
-                        assertNotNull(buckets);
-                        signal.countDown();
-                    }
+                dribbbleService.getShotBuckets(TEST_SHOT_ID)
+                        .enqueue(new Callback<List<Bucket>>() {
+                            @Override
+                            public void onResponse(Call<List<Bucket>> call, Response<List<Bucket>> response) {
+                                assertNotNull(response.body());
+                                signal.countDown();
+                            }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        assertTrue("testGetShotBuckets is failed", false);
-                        signal.countDown();
-                    }
-                });
+                            @Override
+                            public void onFailure(Call<List<Bucket>> call, Throwable t) {
+                                assertTrue("testGetShotBuckets is failed", false);
+                                signal.countDown();
+                            }
+                        });
             }
         });
 
@@ -462,24 +487,25 @@ public class DribbbleShotsServiceTest extends InstrumentationTestCase {
 
     /* Shot Comment */
 
-    public void testGetShotComments() throws Throwable{
+    public void testGetShotComments() throws Throwable {
         final CountDownLatch signal = new CountDownLatch(1);
         runTestOnUiThread(new Runnable() {
             @Override
             public void run() {
-                dribbbleService.getShotComments(TEST_SHOT_ID, new Callback<List<Comment>>() {
-                    @Override
-                    public void success(List<Comment> comments, Response response) {
-                        assertNotNull(comments);
-                        signal.countDown();
-                    }
+                dribbbleService.getShotComments(TEST_SHOT_ID)
+                        .enqueue(new Callback<List<Comment>>() {
+                            @Override
+                            public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response) {
+                                assertNotNull(response.body());
+                                signal.countDown();
+                            }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        assertTrue("testGetShotComments is failed", false);
-                        signal.countDown();
-                    }
-                });
+                            @Override
+                            public void onFailure(Call<List<Comment>> call, Throwable t) {
+                                assertTrue("testGetShotComments is failed", false);
+                                signal.countDown();
+                            }
+                        });
             }
         });
 
@@ -491,19 +517,20 @@ public class DribbbleShotsServiceTest extends InstrumentationTestCase {
         runTestOnUiThread(new Runnable() {
             @Override
             public void run() {
-                dribbbleService.getCommentLikes(TEST_SHOT_ID, TEST_COMMENT_ID, new Callback<List<Like>>() {
-                    @Override
-                    public void success(List<Like> likes, Response response) {
-                        assertNotNull(likes);
-                        signal.countDown();
-                    }
+                dribbbleService.getCommentLikes(TEST_SHOT_ID, TEST_COMMENT_ID)
+                        .enqueue(new Callback<List<Like>>() {
+                            @Override
+                            public void onResponse(Call<List<Like>> call, Response<List<Like>> response) {
+                                assertNotNull(response.body());
+                                signal.countDown();
+                            }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        assertTrue("testGetCommentLikes is failed", false);
-                        signal.countDown();
-                    }
-                });
+                            @Override
+                            public void onFailure(Call<List<Like>> call, Throwable t) {
+                                assertTrue("testGetCommentLikes is failed", false);
+                                signal.countDown();
+                            }
+                        });
             }
         });
 
@@ -515,19 +542,20 @@ public class DribbbleShotsServiceTest extends InstrumentationTestCase {
         runTestOnUiThread(new Runnable() {
             @Override
             public void run() {
-                dribbbleService.getShotComment(TEST_SHOT_ID, TEST_COMMENT_ID, new Callback<Comment>() {
-                    @Override
-                    public void success(Comment comment, Response response) {
-                        assertNotNull(comment);
-                        signal.countDown();
-                    }
+                dribbbleService.getShotComment(TEST_SHOT_ID, TEST_COMMENT_ID)
+                        .enqueue(new Callback<Comment>() {
+                            @Override
+                            public void onResponse(Call<Comment> call, Response<Comment> response) {
+                                assertNotNull(response.body());
+                                signal.countDown();
+                            }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        assertTrue("getShotComment is failed", false);
-                        signal.countDown();
-                    }
-                });
+                            @Override
+                            public void onFailure(Call<Comment> call, Throwable t) {
+                                assertTrue("getShotComment is failed", false);
+                                signal.countDown();
+                            }
+                        });
             }
         });
 
@@ -537,49 +565,55 @@ public class DribbbleShotsServiceTest extends InstrumentationTestCase {
     public void testCreateUpdateDeleteComment() throws Throwable {
         final CountDownLatch signal = new CountDownLatch(1);
         runTestOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Comment comment = new Comment();
-                comment.setBody("New comment body");
-                dribbbleService.createComment(TEST_SHOT_ID, comment, new Callback<Comment>() {
-                    @Override
-                    public void success(Comment comment, Response response) {
-                        assertNotNull(comment);
-                        comment.setBody("Updated body of comment");
-                        dribbbleService.updateShotComment(TEST_SHOT_ID, comment.getId(), comment, new Callback<Comment>() {
-                            @Override
-                            public void success(Comment comment, Response response) {
-                                assertNotNull(comment);
-                                dribbbleService.deleteShotComment(TEST_SHOT_ID, comment.getId(), new Callback<Void>() {
-                                    @Override
-                                    public void success(Void aVoid, Response response) {
-                                        signal.countDown();
-                                    }
+                              @Override
+                              public void run() {
+                                  Comment comment = new Comment();
+                                  comment.setBody("New comment body");
+                                  dribbbleService.createComment(TEST_SHOT_ID, comment)
+                                          .enqueue(new Callback<Comment>() {
+                                              @Override
+                                              public void onResponse(Call<Comment> call, Response<Comment> response) {
+                                                  Comment comment = response.body();
+                                                  assertNotNull(comment);
+                                                  comment.setBody("Updated body of comment");
+                                                  dribbbleService.updateShotComment(TEST_SHOT_ID, comment.getId(), comment)
+                                                          .enqueue(new Callback<Comment>() {
+                                                              @Override
+                                                              public void onResponse(Call<Comment> call, Response<Comment> response) {
+                                                                  Comment comment = response.body();
+                                                                  assertNotNull(comment);
+                                                                  dribbbleService.deleteShotComment(TEST_SHOT_ID, comment.getId())
+                                                                          .enqueue(new Callback<Void>() {
+                                                                              @Override
+                                                                              public void onResponse(Call<Void> call, Response<Void> response) {
+                                                                                  signal.countDown();
+                                                                              }
 
-                                    @Override
-                                    public void failure(RetrofitError error) {
-                                        assertTrue("deleteShotComment is failed", false);
-                                        signal.countDown();
-                                    }
-                                });
-                            }
+                                                                              @Override
+                                                                              public void onFailure(Call<Void> call, Throwable t) {
+                                                                                  assertTrue("deleteShotComment is failed", false);
+                                                                                  signal.countDown();
+                                                                              }
+                                                                          });
+                                                              }
 
-                            @Override
-                            public void failure(RetrofitError error) {
-                                assertTrue("updateShotComment is failed", false);
-                                signal.countDown();
-                            }
-                        });
-                    }
+                                                              @Override
+                                                              public void onFailure(Call<Comment> call, Throwable t) {
+                                                                  assertTrue("updateShotComment is failed", false);
+                                                                  signal.countDown();
+                                                              }
+                                                          });
+                                              }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        assertTrue("createComment is failed", false);
-                        signal.countDown();
-                    }
-                });
-            }
-        });
+                                              @Override
+                                              public void onFailure(Call<Comment> call, Throwable t) {
+                                                  assertTrue("createComment is failed", false);
+                                                  signal.countDown();
+                                              }
+                                          });
+                              }
+                          }
+        );
 
         signal.await();
     }
@@ -589,46 +623,45 @@ public class DribbbleShotsServiceTest extends InstrumentationTestCase {
         runTestOnUiThread(new Runnable() {
             @Override
             public void run() {
-                dribbbleService.likeShotComment(TEST_SHOT_ID, TEST_COMMENT_ID, new Callback<Like>() {
-
-                    @Override
-                    public void success(Like like, Response response) {
-                        assertNotNull(like);
-
-                        dribbbleService.checkIsLikedShotComment(TEST_SHOT_ID, TEST_COMMENT_ID, new Callback<Like>() {
-
+                dribbbleService.likeShotComment(TEST_SHOT_ID, TEST_COMMENT_ID)
+                        .enqueue(new Callback<Like>() {
                             @Override
-                            public void success(Like like, Response response) {
-                                assertNotNull(like);
+                            public void onResponse(Call<Like> call, Response<Like> response) {
+                                assertNotNull(response.body());
+                                dribbbleService.checkIsLikedShotComment(TEST_SHOT_ID, TEST_COMMENT_ID)
+                                        .enqueue(new Callback<Like>() {
+                                            @Override
+                                            public void onResponse(Call<Like> call, Response<Like> response) {
+                                                assertNotNull(response.body());
+                                                dribbbleService.unlikeShotComment(TEST_SHOT_ID, TEST_COMMENT_ID)
+                                                        .enqueue(new Callback<Void>() {
+                                                            @Override
+                                                            public void onResponse(Call<Void> call, Response<Void> response) {
+                                                                signal.countDown();
+                                                            }
 
-                                dribbbleService.unlikeShotComment(TEST_SHOT_ID, TEST_COMMENT_ID, new Callback<Void>() {
-                                    @Override
-                                    public void success(Void aVoid, Response response) {
-                                        signal.countDown();
-                                    }
+                                                            @Override
+                                                            public void onFailure(Call<Void> call, Throwable t) {
+                                                                assertTrue("unlikeShotComment is failed", false);
+                                                                signal.countDown();
+                                                            }
+                                                        });
+                                            }
 
-                                    @Override
-                                    public void failure(RetrofitError error) {
-                                        assertTrue("unlikeShotComment is failed", false);
-                                        signal.countDown();
-                                    }
-                                });
+                                            @Override
+                                            public void onFailure(Call<Like> call, Throwable t) {
+                                                assertTrue("checkIsLikedShotComment is failed", false);
+                                                signal.countDown();
+                                            }
+                                        });
                             }
 
                             @Override
-                            public void failure(RetrofitError error) {
-                                assertTrue("checkIsLikedShotComment is failed", false);
+                            public void onFailure(Call<Like> call, Throwable t) {
+                                assertTrue("likeShotComment is failed", false);
                                 signal.countDown();
                             }
                         });
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        assertTrue("likeShotComment is failed", false);
-                        signal.countDown();
-                    }
-                });
             }
         });
 
@@ -644,58 +677,60 @@ public class DribbbleShotsServiceTest extends InstrumentationTestCase {
             @Override
             public void run() {
 
-                dribbbleUserService.getAuthenticatedUsersLikes(new Callback<List<Like>>() {
-                    @Override
-                    public void success(List<Like> likes, Response response) {
-                        assertNotNull(likes);
-                        final Shot shot = likes.get(0).getShot();
-
-                        dribbbleService.unlikeShot(shot.getId(), new Callback<Void>() {
+                dribbbleUserService.getAuthenticatedUsersLikes()
+                        .enqueue(new Callback<List<Like>>() {
                             @Override
-                            public void success(Void aVoid, Response response) {
-
-                                dribbbleService.likeShot(shot.getId(), new Callback<Like>() {
-                                    @Override
-                                    public void success(Like like, Response response) {
-                                        assertNotNull(like);
-
-                                        dribbbleService.checkShotIsLiked(shot.getId(), new Callback<Like>() {
+                            public void onResponse(Call<List<Like>> call, Response<List<Like>> response) {
+                                List<Like> likes = response.body();
+                                assertNotNull(likes);
+                                final Shot shot = likes.get(0).getShot();
+                                dribbbleService.unlikeShot(shot.getId())
+                                        .enqueue(new Callback<Void>() {
                                             @Override
-                                            public void success(Like like, Response response) {
-                                                assertNotNull(like);
-                                                signal.countDown();
+                                            public void onResponse(Call<Void> call, Response<Void> response) {
+                                                dribbbleService.likeShot(shot.getId())
+                                                        .enqueue(new Callback<Like>() {
+                                                            @Override
+                                                            public void onResponse(Call<Like> call, Response<Like> response) {
+                                                                assertNotNull(response.body());
+                                                                dribbbleService.checkShotIsLiked(shot.getId())
+                                                                        .enqueue(new Callback<Like>() {
+                                                                            @Override
+                                                                            public void onResponse(Call<Like> call, Response<Like> response) {
+                                                                                assertNotNull(response.body());
+                                                                                signal.countDown();
+                                                                            }
+
+                                                                            @Override
+                                                                            public void onFailure(Call<Like> call, Throwable t) {
+                                                                                assertTrue("checkShotIsLiked is failed", false);
+                                                                                signal.countDown();
+                                                                            }
+                                                                        });
+                                                            }
+
+                                                            @Override
+                                                            public void onFailure(Call<Like> call, Throwable t) {
+                                                                assertTrue("likeShot is failed", false);
+                                                                signal.countDown();
+                                                            }
+                                                        });
                                             }
 
                                             @Override
-                                            public void failure(RetrofitError error) {
-                                                assertTrue("checkShotIsLiked is failed", false);
+                                            public void onFailure(Call<Void> call, Throwable t) {
+                                                assertTrue("unlikeShot is failed", false);
                                                 signal.countDown();
                                             }
                                         });
-                                    }
-
-                                    @Override
-                                    public void failure(RetrofitError error) {
-                                        assertTrue("likeShot is failed", false);
-                                        signal.countDown();
-                                    }
-                                });
                             }
 
                             @Override
-                            public void failure(RetrofitError error) {
-                                assertTrue("unlikeShot is failed", false);
+                            public void onFailure(Call<List<Like>> call, Throwable t) {
+                                assertTrue("getAuthenticatedUsersLikes is failed", false);
                                 signal.countDown();
                             }
                         });
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        assertTrue("getAuthenticatedUsersLikes is failed", false);
-                        signal.countDown();
-                    }
-                });
             }
         });
 
@@ -707,19 +742,20 @@ public class DribbbleShotsServiceTest extends InstrumentationTestCase {
         runTestOnUiThread(new Runnable() {
             @Override
             public void run() {
-                dribbbleService.getShotLikes(TEST_SHOT_ID, new Callback<List<Like>>() {
-                    @Override
-                    public void success(List<Like> likes, Response response) {
-                        assertNotNull(likes);
-                        signal.countDown();
-                    }
+                dribbbleService.getShotLikes(TEST_SHOT_ID)
+                        .enqueue(new Callback<List<Like>>() {
+                            @Override
+                            public void onResponse(Call<List<Like>> call, Response<List<Like>> response) {
+                                assertNotNull(response.body());
+                                signal.countDown();
+                            }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        assertTrue("testGetShotLikes is failed", false);
-                        signal.countDown();
-                    }
-                });
+                            @Override
+                            public void onFailure(Call<List<Like>> call, Throwable t) {
+                                assertTrue("testGetShotLikes is failed", false);
+                                signal.countDown();
+                            }
+                        });
             }
         });
 
@@ -733,19 +769,20 @@ public class DribbbleShotsServiceTest extends InstrumentationTestCase {
         runTestOnUiThread(new Runnable() {
             @Override
             public void run() {
-                dribbbleService.getShotProjectsList(TEST_SHOT_ID, new Callback<List<Project>>() {
-                    @Override
-                    public void success(List<Project> projects, Response response) {
-                        assertNotNull(projects);
-                        signal.countDown();
-                    }
+                dribbbleService.getShotProjectsList(TEST_SHOT_ID)
+                        .enqueue(new Callback<List<Project>>() {
+                            @Override
+                            public void onResponse(Call<List<Project>> call, Response<List<Project>> response) {
+                                assertNotNull(response.body());
+                                signal.countDown();
+                            }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        assertTrue("getShotProjectsList is failed", false);
-                        signal.countDown();
-                    }
-                });
+                            @Override
+                            public void onFailure(Call<List<Project>> call, Throwable t) {
+                                assertTrue("getShotProjectsList is failed", false);
+                                signal.countDown();
+                            }
+                        });
             }
         });
 
@@ -759,19 +796,21 @@ public class DribbbleShotsServiceTest extends InstrumentationTestCase {
         runTestOnUiThread(new Runnable() {
             @Override
             public void run() {
-                dribbbleService.getShotReboundsList(TEST_SHOT_ID, new Callback<List<Rebound>>() {
-                    @Override
-                    public void success(List<Rebound> rebounds, Response response) {
-                        assertNotNull(rebounds);
-                        signal.countDown();
-                    }
+                dribbbleService.getShotReboundsList(TEST_SHOT_ID)
+                        .enqueue(new Callback<List<Rebound>>() {
+                            @Override
+                            public void onResponse(Call<List<Rebound>> call, Response<List<Rebound>> response) {
+                                assertNotNull(response.body());
+                                signal.countDown();
+                            }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        assertTrue("getShotReboundsList is failed", false);
-                        signal.countDown();
-                    }
-                });
+                            @Override
+                            public void onFailure(Call<List<Rebound>> call, Throwable t) {
+                                assertTrue("getShotReboundsList is failed", false);
+                                t.printStackTrace();
+                                signal.countDown();
+                            }
+                        });
             }
         });
 
