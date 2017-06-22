@@ -1,1 +1,1 @@
-include ':dribbble-sdk-library', ':oAuth', ':sdk-sample'
+include ':dribbble-sdk-library', ':sdk-sample'

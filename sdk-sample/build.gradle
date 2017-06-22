@@ -26,5 +26,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'com.squareup.okhttp3:logging-interceptor:3.8.0'
-    compile 'com.google.android.gms:play-services-base:10.2.6'
+    compile 'com.google.android.gms:play-services-base:11.0.1'
 }

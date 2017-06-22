@@ -24,6 +24,11 @@ ext {
     allLicenses = ["MIT"]
 }
 
+configurations {
+    compile.exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+    compile.exclude group: 'xpp3', module: 'xpp3'
+}
+
 android {
     compileSdkVersion 25
     buildToolsVersion '25.0.3'
@@ -43,13 +48,21 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile 'junit:junit:4.12'
-    compile project(':oAuth')
-
     compile 'com.android.support:appcompat-v7:25.3.1'
+
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
+
+    compile('com.google.api-client:google-api-client-android:1.15.0-rc') {
+        exclude group: 'com.google.android.google-play-services', module: 'google-play-services'
+        exclude group: 'junit', module: 'junit'
+        exclude group: 'com.google.android', module: 'android'
+    }
+    compile 'com.google.oauth-client:google-oauth-client-java6:1.15.0-rc'
+    compile 'com.google.http-client:google-http-client-jackson:1.15.0-rc'
 }
+
 apply from: 'bintray.gradle'
 apply from: 'install.gradle'
