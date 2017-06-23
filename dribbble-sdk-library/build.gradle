@@ -1,0 +1,68 @@
+apply plugin: 'com.android.library'
+
+ext {
+    bintrayRepo = 'maven'
+    bintrayName = 'dribbble-android-sdk'
+
+    publishedGroupId = 'com.agilie.android.dribbblesdklibrary'
+    libraryName = 'Dribbble SDK'
+    artifact = 'dribbble-sdk'
+
+    libraryDescription = 'Dribbble.com API wrapper for Android'
+
+    siteUrl = 'https://github.com/agilie/dribbble-android-sdk'
+    gitUrl = 'https://github.com/agilie/dribbble-android-sdk.git'
+
+    libraryVersion = '1.0'
+
+    developerId = 'akotsuba'
+    developerName = 'Alexander Kotsuba'
+    developerEmail = 'kotsubaaa@gmail.com'
+
+    licenseName = 'The MIT License (MIT)'
+    licenseUrl = 'http://opensource.org/licenses/MIT'
+    allLicenses = ["MIT"]
+}
+
+configurations {
+    compile.exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+    compile.exclude group: 'xpp3', module: 'xpp3'
+}
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion '25.0.3'
+
+    defaultConfig {
+        minSdkVersion 19
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:25.3.1'
+
+    compile 'com.squareup.retrofit2:retrofit:2.3.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
+
+    compile('com.google.api-client:google-api-client-android:1.15.0-rc') {
+        exclude group: 'com.google.android.google-play-services', module: 'google-play-services'
+        exclude group: 'junit', module: 'junit'
+        exclude group: 'com.google.android', module: 'android'
+    }
+    compile 'com.google.oauth-client:google-oauth-client-java6:1.15.0-rc'
+    compile 'com.google.http-client:google-http-client-jackson:1.15.0-rc'
+}
+
+apply from: 'bintray.gradle'
+apply from: 'install.gradle'

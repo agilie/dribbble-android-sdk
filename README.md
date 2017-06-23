@@ -1,5 +1,7 @@
 # Dribbble API SDK
 
+[ ![Download](https://api.bintray.com/packages/agilie/maven/Dribbble/images/download.svg) ](https://bintray.com/agilie/maven/Dribbble/_latestVersion)
+
 Dribbble Android SDK is an unofficial wrapper for [Dribbble API v1](http://developer.dribbble.com/v1/).
 
 ## Link to iOS repo
@@ -10,24 +12,64 @@ Check out our [Dribbble iOS SDK](https://github.com/agilie/dribbble-ios-sdk)
 
 - <b>Android Studio</b>
 
-    To use Dribbble API SDK, clone the project and import oAuth and sdk-library modules into your project.
+    To use Dribbble API SDK as source code, clone the project and import [sdk-library/](sdk-sample) module into your project.
 
 - <b>Maven</b>
 
-    Coming soon
+Add rependency in your `.pom` file:
+````xml
+<dependency>
+  <groupId>com.agilie</groupId>
+  <artifactId>dribbble-sdk-library</artifactId>
+  <version>1.1</version>
+  <type>pom</type>
+</dependency>
+````
 
 - <b>Gradle</b>
 
-    Coming soon
+Add dependency in your `build.gradle` file:
+````gradle
+compile 'com.agilie:dribbble-sdk-library:1.1'
+````
+
 
 ## Requirements
 
-Android 2.3+ (API level 9+)
+Android 4.4+ (API level 19+)
+
 
 ## Quick Start
 
-Please follow sdk usage example (sdk-sample module). It demonstrates how to login, logout and call API methods provided by SDK.
-Don't forget to fill the credentials to use Dribbble API:
+The reason why min SDK level is so high is because Dribbble stopped supporting protocols lower than [TLS1.2](https://en.wikipedia.org/wiki/Transport_Layer_Security#TLS_1.2). As per [provided table](https://en.wikipedia.org/wiki/Transport_Layer_Security#Web_browsers), it is supported since API level 16 and enabled automatically since API 20+. So, [the handshake](https://www.ssllabs.com/ssltest/analyze.html?d=dribbble.com) with [Dribbble](https://dribbble.com) fails for Android versions lower than 4.4.2 (this site does not even work in devices' browsers). 
+
+[Here](sdk-sample/src/main/java/com/agilie/dribbblesdk/sample/activity/DribbbleSdkSampleApplication.java) you can find the workaround how to enable TLS 1.2 support for Android OS lower than 5.0. __don't forget__ to add this in your project:
+
+```java
+// http://stackoverflow.com/questions/29249630/android-enable-tlsv1-2-in-okhttp
+    private void checkTls() {
+        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            try {
+                ProviderInstaller.installIfNeededAsync(this, new ProviderInstaller.ProviderInstallListener() {
+                    @Override
+                    public void onProviderInstalled() {
+                        // successfully enabled
+                    }
+
+                    @Override
+                    public void onProviderInstallFailed(int i, Intent intent) {
+                        // no Google Play Services provided?
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+```
+
+Please follow sdk usage [example](sdk-sample/). It demonstrates how to login, logout and call API methods provided by SDK.
+__Don't forget__ to fill the credentials to use Dribbble API:
 ```java
 private static final String DRIBBBLE_CLIENT_ID = "<YOUR CLIENT ID HERE>";
 private static final String DRIBBBLE_CLIENT_SECRET = "<YOUR CLIENT SECRET HERE>";
@@ -140,21 +182,18 @@ Call<Shot> getShot(@Path("id") long shotId);
 
 @Multipart
 @POST("shots")
-Call<Void> createShot(@Part("title") String title, @Part("image") RequestBody image, @Part("description") String description,
+Call<Void> createShot(@Part("title") String title, @Part MultipartBody.Part image, @Part("description") String description,
                           @Part("tags") String[] tags, @Part("team_id") int teamId, @Part("rebound_source_id") int reboundSourceId);
-                          
 @Multipart
 @POST("shots")
-Call<Void> createShot(@Part("title") String title, @Part("image") RequestBody image, @Part("description") String description,
+Call<Void> createShot(@Part("title") String title, @Part MultipartBody.Part image, @Part("description") String description,
                           @Part("tags") String[] tags);
-                          
 @Multipart
 @POST("shots")
-Call<Void> createShot(@Part("title") String title, @Part("image") RequestBody image);
+Call<Void> createShot(@Part("title") String title, @Part MultipartBody.Part image);
 
 @Multipart
-@POST("shots")
-Call<Void> createShot(@PartMap Map<String, Object> partMap);
+@POST("shots")Call<Void> createShot(@PartMap Map<String, Object> partMap);
 
 @Multipart
 @PUT("shots/{id}")
