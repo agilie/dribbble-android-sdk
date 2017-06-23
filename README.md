@@ -38,12 +38,38 @@ compile 'com.agilie:dribbble-sdk-library:1.1'
 
 Android 4.4+ (API level 19+)
 
-The reason why min SDK level is so high is because of [TLS1.2](https://en.wikipedia.org/wiki/Transport_Layer_Security#TLS_1.2) support in appropriate versions of Android OS. As per [provided table](https://en.wikipedia.org/wiki/Transport_Layer_Security#Web_browsers), it is supported since API level 16 and enabled automatically since API 20+.
 
 ## Quick Start
 
-Please follow sdk usage example (sdk-sample module). It demonstrates how to login, logout and call API methods provided by SDK.
-Don't forget to fill the credentials to use Dribbble API:
+The reason why min SDK level is so high is because Dribbble stopped supporting protocols lower than [TLS1.2](https://en.wikipedia.org/wiki/Transport_Layer_Security#TLS_1.2). As per [provided table](https://en.wikipedia.org/wiki/Transport_Layer_Security#Web_browsers), it is supported since API level 16 and enabled automatically since API 20+. So, [the handshake](https://www.ssllabs.com/ssltest/analyze.html?d=dribbble.com) with [Dribbble](https://dribbble.com) fails for Android versions lower than 4.4.2 (this site does not even work in devices' browsers). 
+
+[Here](sdk-sample/src/main/java/com/agilie/dribbblesdk/sample/activity/DribbbleSdkSampleApplication.java) you can find the workaround how to enable TLS 1.2 support for Android OS lower than 5.0. __don't forget__ to add this in your project:
+
+```java
+// http://stackoverflow.com/questions/29249630/android-enable-tlsv1-2-in-okhttp
+    private void checkTls() {
+        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            try {
+                ProviderInstaller.installIfNeededAsync(this, new ProviderInstaller.ProviderInstallListener() {
+                    @Override
+                    public void onProviderInstalled() {
+                        // successfully enabled
+                    }
+
+                    @Override
+                    public void onProviderInstallFailed(int i, Intent intent) {
+                        // no Google Play Services provided?
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+```
+
+Please follow sdk usage [example](sdk-sample/). It demonstrates how to login, logout and call API methods provided by SDK.
+__Don't forget__ to fill the credentials to use Dribbble API:
 ```java
 private static final String DRIBBBLE_CLIENT_ID = "<YOUR CLIENT ID HERE>";
 private static final String DRIBBBLE_CLIENT_SECRET = "<YOUR CLIENT SECRET HERE>";
