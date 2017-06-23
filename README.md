@@ -1,5 +1,7 @@
 # Dribbble API SDK
 
+[ ![Download](https://api.bintray.com/packages/agilie/maven/Dribbble/images/download.svg) ](https://bintray.com/agilie/maven/Dribbble/_latestVersion)
+
 Dribbble Android SDK is an unofficial wrapper for [Dribbble API v1](http://developer.dribbble.com/v1/).
 
 ## Link to iOS repo
@@ -10,19 +12,33 @@ Check out our [Dribbble iOS SDK](https://github.com/agilie/dribbble-ios-sdk)
 
 - <b>Android Studio</b>
 
-    To use Dribbble API SDK, clone the project and import oAuth and sdk-library modules into your project.
+    To use Dribbble API SDK as source code, clone the project and import [sdk-library/](sdk-sample) module into your project.
 
 - <b>Maven</b>
 
-    Coming soon
+Add rependency in your `.pom` file:
+````xml
+<dependency>
+  <groupId>com.agilie</groupId>
+  <artifactId>dribbble-sdk-library</artifactId>
+  <version>1.1</version>
+  <type>pom</type>
+</dependency>
+````
 
 - <b>Gradle</b>
 
-    Coming soon
+Add dependency in your `build.gradle` file:
+````gradle
+compile 'com.agilie:dribbble-sdk-library:1.1'
+````
+
 
 ## Requirements
 
-Android 2.3+ (API level 9+)
+Android 4.4+ (API level 19+)
+
+The reason why min SDK level is so high is because of [TLS1.2](https://en.wikipedia.org/wiki/Transport_Layer_Security#TLS_1.2) support in appropriate versions of Android OS. As per [provided table](https://en.wikipedia.org/wiki/Transport_Layer_Security#Web_browsers), it is supported since API level 16 and enabled automatically since API 20+.
 
 ## Quick Start
 
