@@ -42,3 +42,5 @@ Thumbs.db
 
 */*.iml
 /.idea/
+/rx-dribbble-sdk-library/proguard-rules.pro
+/dribbble-android-sdk.iml

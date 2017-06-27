@@ -9,7 +9,7 @@ install {
                 groupId 'com.agilie' // CREATE A GROUP ID FOR YOUR LIBRARY
                 artifactId 'dribbble-sdk-library' // THE NAME OF YOUR MODULE
 
-                name 'dribbble-android-sdk' // YOUR LIBRARY NAME
+                name 'dribbble-sdk-library' // YOUR LIBRARY NAME
                 description 'Dribbble Android SDK is an unofficial wrapper for Dribbble API v1. (Designer, Shot, Comment, User Story, Like, Follow)' // YOUR LIBRARY DESCRIPTION
                 url 'https://github.com/agilie/dribbble-android-sdk' // YOUR SITE
 
