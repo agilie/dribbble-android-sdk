@@ -1,0 +1,37 @@
+apply plugin: 'com.github.dcendents.android-maven'
+group = 'com.agilie' // CREATE A GROUP ID FOR YOUR LIBRARY
+
+install {
+    repositories.mavenInstaller {
+        pom {
+            project {
+                packaging 'RxDribbble'
+                groupId 'com.agilie' // CREATE A GROUP ID FOR YOUR LIBRARY
+                artifactId 'rx-dribbble-sdk-library' // THE NAME OF YOUR MODULE
+
+                name 'rx-dribbble-sdk-library' // YOUR LIBRARY NAME
+                description 'RxDribbble Android SDK is an unofficial wrapper for Dribbble API v1 with RxAndroid support. (Designer, Shot, Comment, User Story, Like, Follow)' // YOUR LIBRARY DESCRIPTION
+                url 'https://github.com/agilie/dribbble-android-sdk' // YOUR SITE
+
+                licenses {
+                    license {
+                        name 'The MIT License (MIT)\n' +
+                                '\n' +
+                                'Copyright (c) 2015 Agilie Team'
+                        url 'https://raw.githubusercontent.com/agilie/dribbble-android-sdk/master/LICENSE.md'
+                    }
+                }
+                developers {
+                    developer {
+
+                    }
+                }
+                scm {
+                    connection 'https://github.com/agilie/dribbble-android-sdk' // YOUR GIT REPO
+                    developerConnection 'https://github.com/agilie/dribbble-android-sdk' // YOUR GIT REPO
+                    url 'https://github.com/agilie/dribbble-android-sdk' // YOUR SITE
+                }
+            }
+        }
+    }
+}
