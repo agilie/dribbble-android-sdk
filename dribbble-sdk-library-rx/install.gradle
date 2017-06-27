@@ -5,11 +5,11 @@ install {
     repositories.mavenInstaller {
         pom {
             project {
-                packaging 'RxDribbble'
+                packaging 'DribbbleRx'
                 groupId 'com.agilie' // CREATE A GROUP ID FOR YOUR LIBRARY
-                artifactId 'rx-dribbble-sdk-library' // THE NAME OF YOUR MODULE
+                artifactId 'dribbble-sdk-library-rx' // THE NAME OF YOUR MODULE
 
-                name 'rx-dribbble-sdk-library' // YOUR LIBRARY NAME
+                name 'dribbble-sdk-library-rx' // YOUR LIBRARY NAME
                 description 'RxDribbble Android SDK is an unofficial wrapper for Dribbble API v1 with RxAndroid support. (Designer, Shot, Comment, User Story, Like, Follow)' // YOUR LIBRARY DESCRIPTION
                 url 'https://github.com/agilie/dribbble-android-sdk' // YOUR SITE
 

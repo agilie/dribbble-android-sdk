@@ -1,14 +1,14 @@
-package com.agilie.rxdribbblesdk;
+package com.agilie.dribbblesdkrx;
 
 import android.os.Build;
 import android.util.Log;
 
 import com.agilie.dribbblesdk.service.retrofit.Tls12SocketFactory;
-import com.agilie.rxdribbblesdk.services.DribbbleBucketsService;
-import com.agilie.rxdribbblesdk.services.DribbbleProjectsService;
-import com.agilie.rxdribbblesdk.services.DribbbleShotsService;
-import com.agilie.rxdribbblesdk.services.DribbbleTeamsService;
-import com.agilie.rxdribbblesdk.services.DribbbleUserService;
+import com.agilie.dribbblesdkrx.services.DribbbleBucketsService;
+import com.agilie.dribbblesdkrx.services.DribbbleProjectsService;
+import com.agilie.dribbblesdkrx.services.DribbbleShotsService;
+import com.agilie.dribbblesdkrx.services.DribbbleTeamsService;
+import com.agilie.dribbblesdkrx.services.DribbbleUserService;
 
 import java.io.IOException;
 import java.util.ArrayList;

@@ -15,7 +15,7 @@ import com.agilie.dribbblesdk.domain.Shot;
 import com.agilie.dribbblesdk.service.auth.AuthCredentials;
 import com.agilie.dribbblesdk.service.auth.DribbbleAuthHelper;
 import com.agilie.dribbblesdk.service.auth.DribbbleConstants;
-import com.agilie.rxdribbblesdk.DribbbleWebServiceHelper;
+import com.agilie.dribbblesdkrx.DribbbleWebServiceHelper;
 import com.google.api.client.auth.oauth2.Credential;
 
 import java.util.Arrays;
@@ -28,7 +28,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import rx.Observable;
 import rx.Subscriber;
 
 public class DribbbleSdkSampleActivity extends AppCompatActivity implements View.OnClickListener {
