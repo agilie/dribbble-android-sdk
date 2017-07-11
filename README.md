@@ -360,7 +360,7 @@ to find the solution or create an new issue that we will fix asap.
 
 ## Author
 
-This library is open-sourced by  [Agilie Team](https://www.agilie.com) <info@agilie.com>
+This library is open-sourced by  [Agilie Team](https://www.agilie.com?utm_source=github&utm_medium=referral&utm_campaign=Git_Android_Java&utm_term=DribbbleSDK) <info@agilie.com>
 
 ## Contributors
 
@@ -373,4 +373,4 @@ We will continue publishing new open-source projects. Stay with us, more updates
 
 ## License
 
-The [MIT](LICENSE.md) License (MIT) Copyright © 2017 [Agilie Team](https://www.agilie.com)
+The [MIT](LICENSE.md) License (MIT) Copyright © 2017 [Agilie Team](https://www.agilie.com?utm_source=github&utm_medium=referral&utm_campaign=Git_Android_Java&utm_term=DribbbleSDK)
