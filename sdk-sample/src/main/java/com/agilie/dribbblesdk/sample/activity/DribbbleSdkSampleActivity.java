@@ -15,7 +15,7 @@ import com.agilie.dribbblesdk.domain.Shot;
 import com.agilie.dribbblesdk.service.auth.AuthCredentials;
 import com.agilie.dribbblesdk.service.auth.DribbbleAuthHelper;
 import com.agilie.dribbblesdk.service.auth.DribbbleConstants;
-import com.agilie.dribbblesdk.service.retrofit.DribbbleWebServiceHelper;
+import com.agilie.dribbblesdkrx.DribbbleWebServiceHelper;
 import com.google.api.client.auth.oauth2.Credential;
 
 import java.util.Arrays;
@@ -28,6 +28,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import rx.Subscriber;
 
 public class DribbbleSdkSampleActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -120,7 +121,7 @@ public class DribbbleSdkSampleActivity extends AppCompatActivity implements View
 
     private void getMyShot() {
         onRequestSent();
-        DribbbleWebServiceHelper
+        com.agilie.dribbblesdk.service.retrofit.DribbbleWebServiceHelper
                 .getDribbbleUserService(getRetrofit(authToken))
                 .getAuthenticatedUsersShots(NUMBER_OF_PAGES, SHOTS_PER_PAGE)
                 .enqueue(new StubCallback<List<Shot>>());
@@ -128,10 +129,56 @@ public class DribbbleSdkSampleActivity extends AppCompatActivity implements View
 
     public void getRecentShot() {
         onRequestSent();
-        DribbbleWebServiceHelper
+        com.agilie.dribbblesdk.service.retrofit.DribbbleWebServiceHelper
                 .getDribbbleShotService(getRetrofit(DRIBBBLE_CLIENT_ACCESS_TOKEN))
                 .fetchShots(NUMBER_OF_PAGES, SHOTS_PER_PAGE)
                 .enqueue(new StubCallback<List<Shot>>());
+    }
+
+    public void getMyShohRx() {
+        onRequestSent();
+        DribbbleWebServiceHelper
+                .getDribbbleUserService(getRetrofit(authToken))
+                .getAuthenticatedUsersShots(NUMBER_OF_PAGES, SHOTS_PER_PAGE)
+                .subscribe(new Subscriber<List<Shot>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        onResponseReceived();
+                    }
+
+                    @Override
+                    public void onNext(List<Shot> shots) {
+                        onResponseReceived();
+                    }
+                });
+    }
+
+    public void getRecentShotRx() {
+        onRequestSent();
+        DribbbleWebServiceHelper
+                .getDribbbleShotService(getRetrofit(DRIBBBLE_CLIENT_ACCESS_TOKEN))
+                .fetchShots(NUMBER_OF_PAGES, SHOTS_PER_PAGE)
+                .subscribe(new Subscriber<List<Shot>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        onResponseReceived();
+                    }
+
+                    @Override
+                    public void onNext(List<Shot> shots) {
+                        onResponseReceived();
+                    }
+                });
     }
 
     /* Auth */

@@ -1,1 +1,1 @@
-include ':dribbble-sdk-library', ':sdk-sample'
+include ':dribbble-sdk-library', ':sdk-sample', ':dribbble-sdk-library-rx'

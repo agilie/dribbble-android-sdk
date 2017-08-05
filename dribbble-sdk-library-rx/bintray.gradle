@@ -33,15 +33,15 @@ bintray {
     configurations = ['archives']
     pkg {
         repo = 'maven'
-        name = 'Dribbble' //YOUR PACKAGE NAME
+        name = 'DribbbleRx' //YOUR PACKAGE NAME
         userOrg = 'agilie'
-        desc = 'Dribbble Android SDK is an unofficial wrapper for Dribbble API v1. (Designer, Shot, Comment, User Story, Like, Follow)' // YOUR LIBRARY DESCRIPTION
+        desc = 'DribbbleRx Android SDK is an unofficial wrapper for Dribbble API v1 with RxAndroid support. (Designer, Shot, Comment, User Story, Like, Follow)' // YOUR LIBRARY DESCRIPTION
         websiteUrl = 'https://github.com/agilie/dribbble-android-sdk' // YOUR SITE
         vcsUrl = 'https://github.com/agilie/dribbble-android-sdk' // YOUR GIT REPO
         licenses = ["The MIT License (MIT)\n" +
-                            " +\n" +
-                            " \n +\n" +
-                            " Copyright (c) 2015 Agilie Team"] // A LIST OF YOUR LICENCES
+                            "+\n" +
+                            "\n +\n" +
+                            "Copyright (c) 2015 Agilie Team"] // A LIST OF YOUR LICENCES
         publish = true
         publicDownloadNumbers = true
     }
